@@ -29,4 +29,10 @@ public class EasyEval {
     }
     return metricValues;
   }
+
+  public static double singleQuery(List<ScoredDocument> results, String qid, QuerySetJudgments qrels, String metric) {
+    QueryResults res = new QueryResults(qid, results);
+    QueryEvaluator evaluator = QueryEvaluatorFactory.instance(metric, new Parameters());
+    return evaluator.evaluate(res, qrels.get(qid));
+  }
 }

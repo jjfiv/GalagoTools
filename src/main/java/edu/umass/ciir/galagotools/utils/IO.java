@@ -2,9 +2,10 @@ package edu.umass.ciir.galagotools.utils;
 
 import org.lemurproject.galago.tupleflow.FileUtility;
 import org.lemurproject.galago.tupleflow.StreamCreator;
+import org.lemurproject.galago.tupleflow.Utility;
 
-import javax.xml.stream.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,11 +35,60 @@ public class IO {
     } catch (IOException e) {
       throw new RuntimeException(e);
     } finally {
-      if(reader != null) try {
-        reader.close();
-      } catch (IOException e) {
-        throw new RuntimeException(e);
+      close(reader);
+    }
+  }
+
+  public static void forEachLine(BufferedReader reader, StringFunctor doWhat) {
+    try {
+      while (true) {
+        String line = reader.readLine();
+        if (line == null) break;
+        doWhat.process(line);
       }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      close(reader);
+    }
+  }
+
+  public static String slurp(File path) throws IOException {
+    final StringBuilder contents = new StringBuilder();
+    forEachLine(path, new StringFunctor() {
+      @Override
+      public void process(String input) {
+        contents.append(input).append('\n');
+      }
+    });
+    return contents.toString();
+  }
+
+  public static String slurp(String path) throws IOException {
+    return slurp(new File(path));
+  }
+
+  public static List<String> slurpLines(String path) throws IOException {
+    final ArrayList<String> lines = new ArrayList<String>();
+    forEachLine(new File(path), new StringFunctor() {
+      @Override
+      public void process(String input) {
+        lines.add(input);
+      }
+    });
+    return lines;
+  }
+
+  public static void copyFile(String from, String to) {
+    InputStream is = null;
+    try {
+      is = StreamCreator.realInputStream(from);
+      Utility.copyStreamToFile(is, new File(to));
+      is = null;
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      close(is);
     }
   }
 
@@ -57,48 +107,25 @@ public class IO {
     }
   }
 
-  private static final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-  private static final XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
-  static {
-    xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
-  }
-
-  public static XMLStreamReader openXMLStream(File fp) throws IOException, XMLStreamException {
-    return xmlInputFactory.createXMLStreamReader(StreamCreator.openInputStream(fp), "UTF-8");
-  }
-
-  public static XMLStreamWriter writeXMLStream(String output) throws IOException, XMLStreamException {
-    return xmlOutputFactory.createXMLStreamWriter(StreamCreator.openOutputStream(output), "UTF-8");
-  }
-
   public static PrintWriter printWriter(String output) throws IOException {
     FileUtility.makeParentDirectories(output);
     return new PrintWriter(StreamCreator.openOutputStream(output));
   }
 
-  public static class PeekLineReader implements Closeable {
-    private final BufferedReader reader;
-    private String current;
+  public static InputStream stringStream(String input) {
+    return new ByteArrayInputStream(input.getBytes());
+  }
 
-    public PeekLineReader(BufferedReader reader) throws IOException {
-      this.reader = reader;
-      this.current = reader.readLine();
+  /** Make annoying idiom of Java more tolerable */
+  public static void close(Closeable obj) {
+    try {
+      if(obj != null) obj.close();
+    } catch (IOException ioe) {
+      throw new RuntimeException(ioe);
     }
+  }
 
-    public String peek() {
-      return current;
-    }
-
-    public String next() throws IOException {
-      if(current == null) return null;
-      String last = current;
-      current = reader.readLine();
-      return last;
-    }
-
-    @Override
-    public void close() throws IOException {
-      reader.close();
-    }
+  public static File file(String path) {
+    return new File(path);
   }
 }

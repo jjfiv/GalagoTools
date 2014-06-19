@@ -1,6 +1,7 @@
 package edu.umass.ciir.galagotools.utils;
 
 import org.lemurproject.galago.tupleflow.FileUtility;
+import org.lemurproject.galago.tupleflow.Parameters;
 
 import java.io.File;
 import java.util.*;
@@ -117,6 +118,34 @@ public class Util {
     return isect;
   }
 
+  @SuppressWarnings("unchecked")
+  public static <A,B> Map<A,B> castMap(Map input) {
+    return (Map<A,B>) input;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> void extendList(Parameters p, String key, Class<T> klazz, T value) {
+    if(!p.isList(key)) {
+      List<T> lst = new ArrayList<T>();
+      boolean hasOriginal = p.containsKey(key);
+      if(hasOriginal) {
+        lst.add((T) p.get(key));
+      }
+
+      p.put(key, lst);
+    }
+    p.getList(key, klazz).add(value);
+  }
+
+  public static <K,T> void extendListInMap(Map<K,List<T>> inMap, K key, T value) {
+    List<T> existing = inMap.get(key);
+    if(existing == null) {
+      existing = new ArrayList<T>();
+      inMap.put(key, existing);
+    }
+    existing.add(value);
+  }
+
   public static interface Transform<A,B> {
     public B process(A input) throws Exception;
   }
@@ -133,11 +162,4 @@ public class Util {
     return output;
   }
 
-  public static <T> T[] reverseArray(T[] input) {
-    T[] output = Arrays.copyOf(input, input.length);
-    for(int i=0; i<input.length; i++) {
-      output[input.length-i-1] = input[i];
-    }
-    return output;
-  }
 }

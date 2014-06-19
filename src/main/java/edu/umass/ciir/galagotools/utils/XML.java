@@ -1,10 +1,12 @@
 package edu.umass.ciir.galagotools.utils;
 
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.io.File;
-import java.io.IOException;
+import org.lemurproject.galago.tupleflow.StreamCreator;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.*;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,12 @@ import java.util.Set;
  * @author jfoley
  */
 public class XML {
+  static final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+  private static final XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+  static {
+    XML.xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
+  }
+
   public static Map<String,String> getFields(XMLStreamReader xml, String endTag, List<String> fields) throws IOException, XMLStreamException {
     HashMap<String,StringBuilder> builders = new HashMap<String,StringBuilder>();
     for(String field : fields) {
@@ -57,6 +65,42 @@ public class XML {
     return results;
   }
 
+  public static XMLStreamReader openXMLStream(File fp) throws IOException, XMLStreamException {
+    return xmlInputFactory.createXMLStreamReader(StreamCreator.openInputStream(fp), "UTF-8");
+  }
+
+  public static XMLStreamWriter writeXMLStream(String output) throws IOException, XMLStreamException {
+    return xmlOutputFactory.createXMLStreamWriter(StreamCreator.openOutputStream(output), "UTF-8");
+  }
+  public static XMLStreamWriter writeXMLStream(PrintStream out) throws XMLStreamException {
+    return xmlOutputFactory.createXMLStreamWriter(out, "UTF-8");
+  }
+  public static XMLStreamWriter writeXMLStream(PrintWriter writer) throws XMLStreamException {
+    return xmlOutputFactory.createXMLStreamWriter(writer);
+  }
+
+  public static org.w3c.dom.Document readFullXML(InputStream input) throws IOException {
+    try {
+      return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+    } catch (SAXException e) {
+      throw new IOException(e);
+    }  catch (ParserConfigurationException e) {
+      throw new IOException(e);
+    }
+  }
+
+  public static interface IXMLAction {
+    public void process(XMLStreamWriter xml) throws XMLStreamException, IOException;
+  }
+  public static String captureXML(IXMLAction action) throws XMLStreamException, IOException {
+    StringWriter sw = new StringWriter();
+    XMLStreamWriter xml = xmlOutputFactory.createXMLStreamWriter(sw);
+    action.process(xml);
+    xml.close();
+    sw.close();
+    return sw.toString();
+  }
+
   public static interface FieldsFunctor {
     public void process(Map<String,String> fieldValues);
   }
@@ -64,7 +108,7 @@ public class XML {
   public static void forFieldsInSections(File fp, String sectionTag, List<String> fields, FieldsFunctor operation) throws IOException, XMLStreamException {
     XMLStreamReader xml = null;
     try {
-      xml = IO.openXMLStream(fp);
+      xml = openXMLStream(fp);
 
       while (xml.hasNext()) {
         Map<String,String> data = getFields(xml, sectionTag, fields);
