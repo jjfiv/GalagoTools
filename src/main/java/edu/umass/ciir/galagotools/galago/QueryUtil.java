@@ -1,7 +1,9 @@
 package edu.umass.ciir.galagotools.galago;
 
+import edu.umass.ciir.galagotools.err.NotHandledNow;
 import edu.umass.ciir.galagotools.utils.DateUtil;
 import org.lemurproject.galago.core.retrieval.query.Node;
+import org.lemurproject.galago.core.retrieval.traversal.Traversal;
 import org.lemurproject.galago.core.util.WordLists;
 import org.lemurproject.galago.tupleflow.Parameters;
 
@@ -35,12 +37,11 @@ public class QueryUtil {
     Node op;
     if(operation.equals("combine") || operation.equals("ql")) {
       op = new Node("combine");
-    } else if(operation.equals("prox") || operation.equals("sdm")) {
+    } else if(operation.equals("sdm")) {
       op = new Node("sdm");
       //op.getNodeParameters().set("default", 20);
-    } else {
-      throw new IllegalArgumentException("No such queryOperation="+operation);
-    }
+    } else throw new NotHandledNow("queryOperation", operation);
+
     for(String term : terms) {
       op.addChild(Node.Text(term));
     }
@@ -68,5 +69,34 @@ public class QueryUtil {
     if(removeDates && (DateUtil.isMonth(term) || DateUtil.isYear(term)))
       return false;
     return true;
+  }
+
+  /**
+   * This function walks the query tree and collects all text nodes
+   */
+  public static List<String> termsFromQuery(Node query) {
+    final ArrayList<String> terms = new ArrayList<String>();
+
+    Traversal collectTerms = new Traversal() {
+      @Override
+      public void beforeNode(Node original, Parameters queryParameters) throws Exception {
+        if(original.isText()) {
+          terms.add(original.getDefaultParameter());
+        }
+      }
+
+      @Override
+      public Node afterNode(Node original, Parameters queryParameters) throws Exception {
+        return original;
+      }
+    };
+
+    try {
+      collectTerms.traverse(query, new Parameters());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+    return terms;
   }
 }

@@ -153,6 +153,25 @@ public class StrUtil {
     return output.toString();
   }
 
+  public static String filterToAscii(String input) {
+    StringBuilder ascii = new StringBuilder();
+    for (int i = 0; i < input.length(); i++) {
+      if (input.codePointAt(i) <= 127) {
+        ascii.append(input.charAt(i));
+      }
+    }
+    return ascii.toString();
+  }
+
+  public static boolean isNonAscii(String input) {
+    for (int i = 0; i < input.length(); i++) {
+      if (input.codePointAt(i) > 127) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public static interface Transform {
     public String process(String input);
   }

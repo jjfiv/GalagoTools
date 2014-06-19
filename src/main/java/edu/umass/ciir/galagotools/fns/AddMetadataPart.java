@@ -59,5 +59,6 @@ public class AddMetadataPart extends AppFunction {
     DiskMapWrapper<String,String> data = new DiskMapWrapper<String,String>(output.getAbsolutePath(), new DiskMapWrapper.StringCodec(), new DiskMapWrapper.StringCodec());
 
     out.println("Wrote "+data.size()+" metadata field="+field+" to "+output.getAbsolutePath());
+    data.close();
   }
 }
