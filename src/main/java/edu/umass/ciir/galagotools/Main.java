@@ -1,6 +1,7 @@
 package edu.umass.ciir.galagotools;
 
 import edu.umass.ciir.galagotools.fns.AddMetadataPart;
+import edu.umass.ciir.galagotools.fns.AppFnRunner;
 import edu.umass.ciir.galagotools.fns.FindInterestingTerms;
 import edu.umass.ciir.galagotools.fns.RandomlySampleDocuments;
 import org.lemurproject.galago.core.tools.App;
@@ -17,6 +18,6 @@ public class Main {
     for (AppFunction fn : fns) {
       App.appFunctions.put(fn.getName(), fn);
     }
-    App.main(args);
+    AppFnRunner.main(args, App.appFunctions.values());
   }
 }

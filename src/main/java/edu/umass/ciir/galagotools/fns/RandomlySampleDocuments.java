@@ -25,10 +25,11 @@ public class RandomlySampleDocuments extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return getName()+"\n\n" +
-        "\t--index=INDEX\n" +
-        "\t--n=NUM_DOCS\n" +
-        "\t--output=OUTPUT (try out.docjson.gz)\n\n";
+    return AppFnRunner.helpDescriptions(this, Parameters.parseArray(
+        "index", "Galago Index",
+        "n", "number of documents to sample",
+        "output", "the output file to write (try out.docjson.gz)"
+    ));
   }
 
   @Override

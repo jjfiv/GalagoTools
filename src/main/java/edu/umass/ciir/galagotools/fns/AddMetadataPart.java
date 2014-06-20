@@ -24,9 +24,10 @@ public class AddMetadataPart extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return "add-metadata-part\n\n"+
-      "\t--field=fieldName\n" +
-      "\t--indexPath=INDEX\n";
+    return AppFnRunner.helpDescriptions(this, Parameters.parseArray(
+        "field", "metadata field name to create diskmap from",
+        "indexPath", "galago index to read from and put it inside"
+    ));
   }
 
   @Override
