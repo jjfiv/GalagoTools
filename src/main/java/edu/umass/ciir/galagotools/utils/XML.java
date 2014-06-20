@@ -65,8 +65,11 @@ public class XML {
     return results;
   }
 
+  public static XMLStreamReader openXMLStream(InputStream is) throws IOException, XMLStreamException {
+    return xmlInputFactory.createXMLStreamReader(is, "UTF-8");
+  }
   public static XMLStreamReader openXMLStream(File fp) throws IOException, XMLStreamException {
-    return xmlInputFactory.createXMLStreamReader(StreamCreator.openInputStream(fp), "UTF-8");
+    return openXMLStream(StreamCreator.openInputStream(fp));
   }
 
   public static XMLStreamWriter writeXMLStream(String output) throws IOException, XMLStreamException {
@@ -105,18 +108,22 @@ public class XML {
     public void process(Map<String,String> fieldValues);
   }
 
-  public static void forFieldsInSections(File fp, String sectionTag, List<String> fields, FieldsFunctor operation) throws IOException, XMLStreamException {
+  public static void forFieldsInSections(InputStream is,  String sectionTag, List<String> fields, FieldsFunctor operation) throws IOException, XMLStreamException {
     XMLStreamReader xml = null;
     try {
-      xml = openXMLStream(fp);
+      xml = openXMLStream(is);
 
       while (xml.hasNext()) {
         Map<String,String> data = getFields(xml, sectionTag, fields);
         operation.process(data);
       }
     } finally {
-      if(xml != null) xml.close();
+      IO.close(xml);
     }
+  }
+
+  public static void forFieldsInSections(File fp, String sectionTag, List<String> fields, FieldsFunctor operation) throws IOException, XMLStreamException {
+    forFieldsInSections(StreamCreator.openInputStream(fp), sectionTag, fields, operation);
   }
 
 }

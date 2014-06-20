@@ -4,6 +4,8 @@ import org.lemurproject.galago.tupleflow.FileUtility;
 import org.lemurproject.galago.tupleflow.StreamCreator;
 import org.lemurproject.galago.tupleflow.Utility;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,6 +126,15 @@ public class IO {
       throw new RuntimeException(ioe);
     }
   }
+
+  public static void close(XMLStreamReader xml) {
+    try {
+      if(xml != null) xml.close();
+    } catch (XMLStreamException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
 
   public static File file(String path) {
     return new File(path);
