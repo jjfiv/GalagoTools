@@ -1,23 +1,24 @@
 package edu.umass.ciir.galagotools.galago;
 
+import edu.umass.ciir.galagotools.callback.Operation;
 import org.lemurproject.galago.core.index.KeyIterator;
 import org.lemurproject.galago.core.index.corpus.CorpusReaderSource;
 import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.parse.DocumentStreamParser;
 import org.lemurproject.galago.core.retrieval.ScoredDocument;
+import org.lemurproject.galago.core.retrieval.iterator.DataIterator;
+import org.lemurproject.galago.core.retrieval.processing.ScoringContext;
 import org.lemurproject.galago.core.types.DocumentSplit;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author jfoley
  */
 public class GalagoUtil {
-  public static interface Operation<T> {
-    public void process(T obj) throws IOException;
-  }
   public static <T extends KeyIterator> void forEachKey(T keyIter, Operation<T> action) throws IOException {
     while(!keyIter.isDone()) {
       action.process(keyIter);
@@ -59,4 +60,45 @@ public class GalagoUtil {
     }
     return names;
   }
+
+  private static <T> Iterator<T> asIterator(final DataIterator<T> galagoDataIter) {
+    final ScoringContext ctx = new ScoringContext();
+    return new Iterator<T>() {
+      @Override
+      public boolean hasNext() {
+        return !galagoDataIter.isDone();
+      }
+
+      @Override
+      public T next() {
+        ctx.document = galagoDataIter.currentCandidate();
+        T obj = galagoDataIter.data(ctx);
+        try {
+          galagoDataIter.movePast(ctx.document);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+        return obj;
+      }
+
+      @Override
+      public void remove() {
+        throw new UnsupportedOperationException("Read-only iterator");
+      }
+    };
+
+  }
+
+  public static <T> Iterable<T> asIterable(final DataIterator<T> galagoDataIter) {
+    return new Iterable<T>() {
+      boolean used = false;
+      @Override
+      public Iterator<T> iterator() {
+        if(used) throw new IllegalStateException("Used DataIterator as Iterable twice!");
+        used=true;
+        return asIterator(galagoDataIter);
+      }
+    };
+  }
 }
+

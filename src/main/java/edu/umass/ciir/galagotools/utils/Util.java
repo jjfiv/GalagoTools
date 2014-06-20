@@ -124,6 +124,11 @@ public class Util {
   }
 
   @SuppressWarnings("unchecked")
+  public static <T> T cast(Object obj) {
+    return (T) obj;
+  }
+
+  @SuppressWarnings("unchecked")
   public static <T> void extendList(Parameters p, String key, Class<T> klazz, T value) {
     if(!p.isList(key)) {
       List<T> lst = new ArrayList<T>();
@@ -160,6 +165,28 @@ public class Util {
       }
     }
     return output;
+  }
+
+  /** process a list in batches of a given size */
+  public static <T> List<List<T>> batched(List<T> input, int batchSize) {
+    int numElements = input.size();
+    int numBatches = numElements/batchSize;
+    if(numBatches * batchSize < numElements) {
+      numBatches++;
+    }
+    List<List<T>> batched = new ArrayList<List<T>>();
+
+    for(int i=0; i<numBatches; i++) {
+      List<T> currentBatch = new ArrayList<T>();
+      for(int j=0; j<batchSize; j++) {
+        int raw = i*batchSize + j;
+        if(raw >= numElements) break;
+        currentBatch.add(input.get(raw));
+      }
+      batched.add(currentBatch);
+    }
+
+    return batched;
   }
 
 }

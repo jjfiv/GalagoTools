@@ -47,7 +47,7 @@ public class StrUtilTest {
 
   @Test
   public void testTakeAfter() throws Exception {
-    assertEquals("bar", StrUtil.takeBefore("foo bar", " "));
+    assertEquals("bar", StrUtil.takeAfter("foo bar", " "));
   }
 
   @Test

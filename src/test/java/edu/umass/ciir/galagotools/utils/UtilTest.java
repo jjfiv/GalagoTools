@@ -2,10 +2,7 @@ package edu.umass.ciir.galagotools.utils;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -33,5 +30,16 @@ public class UtilTest {
 
     assertEquals(1, isect.size());
     assertEquals(3, (int) Util.first(isect));
+  }
+
+  @Test
+  public void testBatched() {
+    List<Integer> raw = Arrays.asList(1,2, 3,4, 5,6, 7);
+    List<List<Integer>> batches = Util.batched(raw, 2);
+    assertEquals(4,batches.size());
+    assertEquals(2,batches.get(0).size());
+    assertEquals(2,batches.get(1).size());
+    assertEquals(2,batches.get(2).size());
+    assertEquals(1,batches.get(3).size());
   }
 }
