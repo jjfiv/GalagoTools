@@ -127,9 +127,11 @@ public class StrUtil {
   }
 
   public static String firstWord(String text) {
-    int pos = text.indexOf(' ');
-    if(pos == -1) return text;
-    return text.substring(0, pos);
+    for(int i=0; i<text.length(); i++) {
+      if(Character.isWhitespace(text.charAt(i)))
+        return text.substring(0,i);
+    }
+    return text;
   }
 
   public static boolean looksLikeInt(String str, int numDigits) {
@@ -163,7 +165,7 @@ public class StrUtil {
     return ascii.toString();
   }
 
-  public static boolean isNonAscii(String input) {
+  public static boolean isAscii(String input) {
     for (int i = 0; i < input.length(); i++) {
       if (input.codePointAt(i) > 127) {
         return false;
