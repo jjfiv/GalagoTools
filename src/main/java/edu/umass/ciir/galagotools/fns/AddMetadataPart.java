@@ -1,9 +1,8 @@
 package edu.umass.ciir.galagotools.fns;
 
+import edu.umass.ciir.galagotools.galago.GalagoUtil;
 import org.lemurproject.galago.core.btree.simple.DiskMapBuilder;
 import org.lemurproject.galago.core.btree.simple.DiskMapWrapper;
-import org.lemurproject.galago.core.index.corpus.CorpusReader;
-import org.lemurproject.galago.core.index.corpus.DocumentReader;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.tools.AppFunction;
@@ -38,14 +37,9 @@ public class AddMetadataPart extends AppFunction {
     File output = new File(indexPath, "metadata."+field);
 
     DiskIndex index = new DiskIndex(indexPath.getAbsolutePath());
-    CorpusReader reader = (CorpusReader) index.getIndexPart("corpus");
-    DocumentReader.DocumentIterator iter = reader.getIterator();
-
     DiskMapBuilder diskMapBuilder = new DiskMapBuilder(output.getAbsolutePath());
 
-    while(!iter.isDone()) {
-      Document doc = iter.getDocument(Document.DocumentComponents.JustMetadata);
-
+    for(Document doc : GalagoUtil.documentIterable(index, Document.DocumentComponents.JustMetadata)) {
       if(doc != null) {
         String value = doc.metadata.get(field);
         if(value != null) {
@@ -53,7 +47,6 @@ public class AddMetadataPart extends AppFunction {
         }
       }
 
-      iter.nextKey();
     }
 
     diskMapBuilder.close();

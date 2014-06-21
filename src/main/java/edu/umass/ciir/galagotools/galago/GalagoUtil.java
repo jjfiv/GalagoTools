@@ -2,7 +2,10 @@ package edu.umass.ciir.galagotools.galago;
 
 import edu.umass.ciir.galagotools.callback.Operation;
 import org.lemurproject.galago.core.index.KeyIterator;
+import org.lemurproject.galago.core.index.corpus.CorpusReader;
 import org.lemurproject.galago.core.index.corpus.CorpusReaderSource;
+import org.lemurproject.galago.core.index.disk.DiskIndex;
+import org.lemurproject.galago.core.index.source.DataSource;
 import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.parse.DocumentStreamParser;
 import org.lemurproject.galago.core.retrieval.ScoredDocument;
@@ -86,7 +89,6 @@ public class GalagoUtil {
         throw new UnsupportedOperationException("Read-only iterator");
       }
     };
-
   }
 
   public static <T> Iterable<T> asIterable(final DataIterator<T> galagoDataIter) {
@@ -99,6 +101,48 @@ public class GalagoUtil {
         return asIterator(galagoDataIter);
       }
     };
+  }
+
+  private static <T> Iterator<T> asIterator(final DataSource<T> source) {
+    return new Iterator<T>() {
+      @Override
+      public boolean hasNext() {
+        return !source.isDone();
+      }
+
+      @Override
+      public T next() {
+        try {
+          long doc = source.currentCandidate();
+          T obj = source.data(doc);
+          source.movePast(doc);
+          return obj;
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
+
+      @Override
+      public void remove() {
+        throw new UnsupportedOperationException("Read-only iterator");
+      }
+    };
+  }
+
+  public static <T> Iterable<T> asIterable(final DataSource<T> src) {
+    return new Iterable<T>() {
+      @Override
+      public Iterator<T> iterator() {
+        return asIterator(src);
+      }
+    };
+  }
+
+  public static Iterable<Document> documentIterable(DiskIndex index, Document.DocumentComponents opts) throws IOException {
+    CorpusReader corpus = (CorpusReader) index.getIndexPart("corpus");
+
+    CorpusReaderSource source = corpus.getIterator().getSource(opts);
+    return asIterable(source);
   }
 }
 
