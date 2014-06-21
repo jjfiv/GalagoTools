@@ -174,6 +174,23 @@ public class StrUtil {
     return true;
   }
 
+  public static String compactSpaces(String input) {
+    StringBuilder sb = new StringBuilder();
+    boolean lastWasSpace = true;
+    for (int i = 0; i < input.length(); i++) {
+      char ch = input.charAt(i);
+      if(Character.isWhitespace(ch)) {
+        if(lastWasSpace) continue;
+        sb.append(' ');
+        lastWasSpace = true;
+        continue;
+      }
+      lastWasSpace = false;
+      sb.append(ch);
+    }
+    return sb.toString();
+  }
+
   public static interface Transform {
     public String process(String input);
   }
