@@ -50,10 +50,7 @@ public class LengthThresholdIterator extends TransformIterator implements Indica
   }
 
   public static void addTo(Parameters argp) {
-    if(!argp.containsKey("operators")) {
-      argp.put("operators", new Parameters());
-    }
-    argp.getMap("operators").put("lenthresh", LengthThresholdIterator.class.getName());
+    IterUtils.addToParameters(argp, "lenthresh", LengthThresholdIterator.class);
   }
 }
 
