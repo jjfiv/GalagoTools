@@ -24,4 +24,8 @@ public final class Match {
     }
     return null;
   }
+
+  public String get(String parentStr) {
+    return parentStr.substring(begin, end);
+  }
 }
