@@ -118,6 +118,10 @@ public class IO {
     return new ByteArrayInputStream(input.getBytes());
   }
 
+  public static BufferedReader stringReader(String input) {
+    return new BufferedReader(new StringReader(input));
+  }
+
   /** Make annoying idiom of Java more tolerable */
   public static void close(Closeable obj) {
     try {
