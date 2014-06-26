@@ -160,9 +160,14 @@ public class FlatSDM extends DisjunctionIterator implements ScoreIterator {
     // collect extent arrays
     for (int i = 0; i < unigramIters.length; i++) {
       ExtentIterator unigramIter = unigramIters[i];
-      pos[i] = unigramIter.extents(c);
-
       long term_tf = unigramIter.count(c);
+
+      if(term_tf > 0) {
+        pos[i] = unigramIter.extents(c);
+      } else {
+        pos[i] = ExtentArray.EMPTY;
+      }
+
       unigram += dirichlet(term_tf, length, mu, term_bg[i]);
     }
 

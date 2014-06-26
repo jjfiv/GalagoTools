@@ -9,15 +9,28 @@ import java.util.regex.Pattern;
  * @author jfoley
  */
 public class WikiTemplateHack {
-  public static final String[] ignoredTemplates = {
-    "reflist", "citation", "harvnb", "webcite",
+  public static final Pattern templateStart = Pattern.compile("\\{\\{");
+  public static final Pattern templateEnd = Pattern.compile("\\}\\}");
+
+  public static final String[] citationTemplates = {
+    "citation", "cite book", "cite web",
+    "harv", "harvnb", "harvtxt", "harvard citation no brackets", "harvard citation", "harvard citation text", "harvcol", "harvcolnb", "harvs",
+    "shortened footnote template", "sfn", "sfnp", "sfnm",
+    "webcite",
+  };
+
+  public static final String[] citationNeededTemplates = {
     "where", "verify", "clarify", "why?", "fact", "dubious", "cn", "citation needed", "nomention",
     "verify credibility", "by whom", "which", "when",
     "unreferenced",
-    "portal", "portal bar",
     "which?", "vague", "dn", "disambiguation needed", "who", "specify",
-    "use mdy dates",
-    "use dmy dates",
+    "as of", "as of?",
+  };
+
+  public static final String[] ignoredTemplates = {
+    "reflist",
+    "portal", "portal bar",
+    "use mdy dates", "use dmy dates",
     "defaultsort",
     "further",
     "main",
@@ -27,7 +40,6 @@ public class WikiTemplateHack {
     "tooltip",
     "year dab",
     "year nav",
-    "as of", "as of?",
     "m1 year in topic",
     "-", "clear left",
     "fr icon", "lt icon", "es icon", "sp icon", "ru icon",
@@ -45,8 +57,6 @@ public class WikiTemplateHack {
     "defaultsort",
     "lang-",
     "link ",
-    "cite ",
-    "cite"
   };
 
   public static final String[] shipTemplates = {
@@ -58,6 +68,7 @@ public class WikiTemplateHack {
 
   public static Map<String,String> templateArgs(String[] split) {
     TreeMap<String,String> args = new TreeMap<String, String>();
+    // skip the first one because it's the name of the template
     for (int i=1; i<split.length; i++) {
       String key = StrUtil.takeBefore(split[i], "=");
       String value = StrUtil.takeAfter(split[i], "=");
@@ -66,16 +77,8 @@ public class WikiTemplateHack {
     return args;
   }
 
-  private static String processTemplate(String title, String input) {
-    String targs[] = input.split("\\|");
-    String templateName = targs[0].toLowerCase();
-    if(ignoredTemplateSet.contains(templateName.trim()))
-      return "";
-
-    for(String ignored : ignoredStartsWith) {
-      if(templateName.startsWith(ignored))
-        return "";
-    }
+  public static String processStylisticTemplate(String targs[]) {
+    final String templateName = targs[0];
 
     if(shipTemplateSet.contains(templateName)) {
       String text = templateName.toUpperCase()+" "+targs[1];
@@ -133,6 +136,24 @@ public class WikiTemplateHack {
     if(templateName.equals("oldstyledate")) {
       return targs[1]+" "+targs[2];
     }
+    return null;
+  }
+
+  public static String processTemplate(String title, String input) {
+    String targs[] = input.split("\\|");
+    String templateName = targs[0].toLowerCase();
+
+    if(isSimpleIgnore(templateName))
+      return "";
+    if(isCitationNeeded(templateName))
+      return "";
+    if(isCitation(templateName))
+      return "";
+
+    // ships and other silly stuff
+    String output = processStylisticTemplate(targs);
+    if(output != null) return output;
+
     Map<String,String> args = templateArgs(targs);
     if(templateName.equals("citation needed span")) {
       return args.get("text");
@@ -146,8 +167,36 @@ public class WikiTemplateHack {
     return input;
   }
 
+  public static boolean isCitation(String templateName) {
+    for(String ignored : citationTemplates) {
+      if(templateName.equals(ignored))
+        return true;
+    }
+    return false;
+  }
+
+  public static boolean isCitationNeeded(String templateName) {
+    for(String ignored : citationNeededTemplates) {
+      if(templateName.equals(ignored))
+        return true;
+    }
+    return false;
+  }
+
+  public static boolean isSimpleIgnore(String templateName) {
+    if(ignoredTemplateSet.contains(templateName.trim()))
+      return true;
+
+    for(String ignored : ignoredStartsWith) {
+      if(templateName.startsWith(ignored))
+        return true;
+    }
+
+    return false;
+  }
+
   public static String convertTemplates(final String title, String input) {
-    return StrUtil.transformBetween(input, Pattern.compile("\\{\\{"), Pattern.compile("\\}\\}"), new StrUtil.Transform() {
+    return StrUtil.transformBetween(input, templateStart, templateEnd, new StrUtil.Transform() {
       @Override
       public String process(String input) {
         return processTemplate(title, input);

@@ -169,9 +169,9 @@ public class QueryLikelihood extends DisjunctionIterator implements ScoreIterato
     Retrieval ret = new LocalRetrieval(argp.getString("index"), argp);
 
 
-    //executeAndTime(ret, "combine", "to be or not to be the very one that we all know");
-    //executeAndTime(ret, "ql", "to be or not to be the very one that we all know");
-    //executeAndTime(ret, "sdm", "to be or not to be the very one that we all know");
+    executeAndTime(ret, "combine", "to be or not to be the very one that we all know");
+    executeAndTime(ret, "ql", "to be or not to be the very one that we all know");
+    executeAndTime(ret, "sdm", "to be or not to be the very one that we all know");
     executeAndTime(ret, "flatsdm", "to be or not to be the very one that we all know");
   }
 }
