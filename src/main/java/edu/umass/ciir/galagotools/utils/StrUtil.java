@@ -1,5 +1,8 @@
 package edu.umass.ciir.galagotools.utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.regex.Pattern;
 
 /**
@@ -85,6 +88,23 @@ public class StrUtil {
       return transformBetween(text.toString(), start, end, transform);
     }
     return text.toString();
+  }
+
+  public static String transformLines(String input, Transform transform) {
+    StringBuilder output = new StringBuilder();
+    BufferedReader reader = new BufferedReader(new StringReader(input));
+    try {
+      while(true) {
+        String line = reader.readLine();
+        if(line == null) break;
+        output.append(transform.process(line));
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      IO.close(reader);
+    }
+    return output.toString();
   }
 
   public static String removeBetween(String input, Pattern start, Pattern end) {
@@ -187,6 +207,9 @@ public class StrUtil {
       }
       lastWasSpace = false;
       sb.append(ch);
+    }
+    if(lastWasSpace) {
+      return sb.toString().trim();
     }
     return sb.toString();
   }

@@ -85,4 +85,19 @@ public class StrUtilTest {
     assertFalse(StrUtil.isAscii("foo\u2013bar"));
     assertTrue(StrUtil.isAscii("foobar~"));
   }
+
+  @Test
+  public void testCompactSpaces() {
+    assertEquals("foo bar", StrUtil.compactSpaces(" foo \tbar\t \n"));
+  }
+
+  @Test
+  public void testTransformLines() {
+    assertEquals("$foo $bar ", StrUtil.transformLines("foo\nbar", new StrUtil.Transform() {
+      @Override
+      public String process(String input) {
+        return "$"+input+" ";
+      }
+    }));
+  }
 }
