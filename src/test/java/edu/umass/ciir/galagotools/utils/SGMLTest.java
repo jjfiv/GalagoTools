@@ -4,6 +4,7 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -20,6 +21,14 @@ public class SGMLTest {
 
     String example2 = "<a href=\"this is removed\">this is too.</a>";
     assertEquals("", SGML.removeTag(example2, "a"));
+  }
+
+  @Test
+  public void makeTagTest() {
+    Map<String,String> attrs = new HashMap<String,String>();
+    attrs.put("bar", "baz");
+    assertEquals("<foo bar=\"baz\"></foo>", SGML.makeTag("foo", attrs, ""));
+    assertEquals("<foo bar=\"baz\"> data </foo>", SGML.makeTag("foo", attrs, "data"));
   }
 
   @Test

@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import java.util.Collections;
@@ -15,6 +16,19 @@ import java.util.regex.Pattern;
  * @author jfoley.
  */
 public class SGML {
+  public static String makeTag(String tagName, Map<String, String> attrs, String text) {
+
+    Element el = new Element(Tag.valueOf(tagName), "/");
+    for (String kv : attrs.keySet()) {
+      el.attributes().put(kv, attrs.get(kv));
+    }
+    if(!text.isEmpty()) {
+      el.appendText(text);
+    }
+
+    return StrUtil.compactSpaces(el.outerHtml());
+  }
+
   public static interface TransformTag {
     public String process(Map<String,String> attrs, String body);
   }
