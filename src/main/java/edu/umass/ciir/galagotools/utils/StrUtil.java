@@ -56,7 +56,7 @@ public class StrUtil {
   /**
    * Calls transform on every string that exists between patterns start and end on input, and returns the result.
    */
-  public static String transformBetween(String input, Pattern start, Pattern end, Transform transform) {
+  public static String transformRecursively(String input, Pattern start, Pattern end, Transform transform, boolean inclusive) {
     StringBuilder text = new StringBuilder();
     int lastPos = 0;
 
@@ -78,17 +78,38 @@ public class StrUtil {
       }
 
       text.append(input.substring(lastPos, startMatch.begin));
-      text.append(transform.process(input.substring(startMatch.end, endMatch.begin)));
+      if(inclusive) {
+        text.append(transform.process(input.substring(startMatch.begin, endMatch.end)));
+      } else {
+        text.append(transform.process(input.substring(startMatch.end, endMatch.begin)));
+      }
       lastPos = endMatch.end;
     }
     text.append(input.substring(lastPos));
 
     // go again to grab the outer ones
     if(hasNested) {
-      return transformBetween(text.toString(), start, end, transform);
+      return transformRecursively(text.toString(), start, end, transform, inclusive);
     }
     return text.toString();
   }
+
+  /**
+   * Calls transform on every string that exists between patterns start and end on input, and returns the result.
+   * Exclusive of the matching patterns
+   */
+  public static String transformBetween(String input, Pattern start, Pattern end, Transform transform) {
+    return transformRecursively(input, start, end, transform, false);
+  }
+
+  /**
+   * Calls transform on every string that exists between patterns start and end on input, and returns the result.
+   * Inclusive of the matching patterns
+   */
+  public static String transformInclusive(String input, Pattern start, Pattern end, Transform transform) {
+    return transformRecursively(input, start, end, transform, true);
+  }
+
 
   public static String transformLines(String input, Transform transform) {
     StringBuilder output = new StringBuilder();
@@ -135,7 +156,7 @@ public class StrUtil {
     if(pos == -1) {
       return input;
     }
-    return input.substring(pos+delim.length());
+    return input.substring(pos + delim.length());
   }
 
   public static String preview(String input, int len) {
