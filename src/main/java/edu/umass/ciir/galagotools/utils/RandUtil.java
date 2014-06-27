@@ -44,4 +44,20 @@ public class RandUtil {
 
     return output;
   }
+
+  public static String nextString(Random rand, int length) {
+    StringBuilder longAndRandom = new StringBuilder();
+    for(int i=0; i<length; i++) {
+      int code = -1;
+      while(code < 0) {
+        code = rand.nextInt() & 0xffff;
+        if(!Character.isDefined(code))
+          code = -1;
+      }
+      longAndRandom.append((char) code);
+    }
+    return longAndRandom.toString();
+  }
+
+
 }

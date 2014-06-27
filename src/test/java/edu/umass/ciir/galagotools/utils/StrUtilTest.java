@@ -100,4 +100,10 @@ public class StrUtilTest {
       }
     }));
   }
+
+  @Test
+  public void removeBack() {
+    assertEquals("Hello", StrUtil.removeBack("Hello.html", ".html"));
+    assertEquals("foo", StrUtil.removeBack("foo.foo", ".foo"));
+  }
 }

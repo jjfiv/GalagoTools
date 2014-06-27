@@ -215,6 +215,7 @@ public class StrUtil {
     return true;
   }
 
+  /** Simplify input string in terms of spaces; all space characters -> ' ' and a maximum width of 1 space */
   public static String compactSpaces(String input) {
     StringBuilder sb = new StringBuilder();
     boolean lastWasSpace = true;
@@ -233,6 +234,12 @@ public class StrUtil {
       return sb.toString().trim();
     }
     return sb.toString();
+  }
+
+  /** Remove ending from input string */
+  public static String removeBack(String input, String ending) {
+    if(!input.endsWith(ending)) return input;
+    return input.substring(0, input.length() - ending.length());
   }
 
   public static interface Transform {

@@ -66,6 +66,18 @@ public class IO {
     return contents.toString();
   }
 
+  public static String slurp(BufferedReader reader) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    char buffer[] = new char[4096];
+    while(true) {
+      int amt = reader.read(buffer);
+      if(amt <= 0) break;
+      sb.append(buffer, 0, amt);
+      if(amt < buffer.length) break;
+    }
+    return sb.toString();
+  }
+
   public static String slurp(String path) throws IOException {
     return slurp(new File(path));
   }
