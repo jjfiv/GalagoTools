@@ -1,7 +1,7 @@
 package edu.umass.ciir.galagotools.utils;
 
 import org.lemurproject.galago.tupleflow.FileUtility;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 
 import java.io.File;
 import java.util.*;

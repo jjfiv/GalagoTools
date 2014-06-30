@@ -2,7 +2,7 @@ package edu.umass.ciir.galagotools.parser;
 
 import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.types.DocumentSplit;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 
 import java.io.IOException;
 

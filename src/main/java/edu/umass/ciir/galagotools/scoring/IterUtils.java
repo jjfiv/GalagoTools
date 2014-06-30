@@ -1,7 +1,7 @@
 package edu.umass.ciir.galagotools.scoring;
 
 import org.lemurproject.galago.core.retrieval.iterator.BaseIterator;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 
 /**
  * @author jfoley.
@@ -9,7 +9,7 @@ import org.lemurproject.galago.tupleflow.Parameters;
 public class IterUtils {
   public static void addToParameters(Parameters p, String name, Class<? extends BaseIterator> iterClass) {
     if(!p.containsKey("operators")) {
-      p.put("operators", new Parameters());
+      p.put("operators", Parameters.instance());
     }
     p.getMap("operators").put(name, iterClass.getName());
   }

@@ -5,7 +5,7 @@ import edu.umass.ciir.galagotools.utils.DateUtil;
 import org.lemurproject.galago.core.retrieval.query.Node;
 import org.lemurproject.galago.core.retrieval.traversal.Traversal;
 import org.lemurproject.galago.core.util.WordLists;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 
 import java.io.IOException;
 import java.util.*;
@@ -92,7 +92,7 @@ public class QueryUtil {
     };
 
     try {
-      collectTerms.traverse(query, new Parameters());
+      collectTerms.traverse(query, Parameters.instance());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

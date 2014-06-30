@@ -13,7 +13,7 @@ import org.lemurproject.galago.core.retrieval.query.AnnotatedNode;
 import org.lemurproject.galago.core.retrieval.query.Node;
 import org.lemurproject.galago.core.retrieval.query.NodeParameters;
 import org.lemurproject.galago.core.retrieval.query.StructuredQuery;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 
 import java.io.IOException;
 
@@ -146,7 +146,7 @@ public class QueryLikelihood extends DisjunctionIterator implements ScoreIterato
 
   public static void executeAndTime(Retrieval ret, String op, String words) throws Exception {
     Node raw = StructuredQuery.parse(String.format("#%s( %s )", op, words));
-    Parameters qp = new Parameters();
+    Parameters qp = Parameters.instance();
     //qp.put("processingModel", RankedDocumentModel.class.getName());
     qp.put("fast", true);
 

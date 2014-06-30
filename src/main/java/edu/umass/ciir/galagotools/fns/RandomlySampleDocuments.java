@@ -7,7 +7,7 @@ import edu.umass.ciir.galagotools.utils.Util;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.tools.AppFunction;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

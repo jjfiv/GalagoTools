@@ -9,12 +9,12 @@ import org.lemurproject.galago.core.retrieval.Results;
 import org.lemurproject.galago.core.retrieval.query.Node;
 import org.lemurproject.galago.core.retrieval.query.StructuredQuery;
 import org.lemurproject.galago.core.tokenize.Tokenizer;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 
 import static org.junit.Assert.assertEquals;
 
 public class LengthThresholdIteratorTest {
-  private Tokenizer tokenizer = Tokenizer.instance(new Parameters());
+  private Tokenizer tokenizer = Tokenizer.instance(Parameters.instance());
   private MemoryIndex memIndex;
 
   private Document makeDoc(String title, String body) {
@@ -35,7 +35,7 @@ public class LengthThresholdIteratorTest {
   }
 
   Results doQ(LocalRetrieval ret, String text) throws Exception {
-    Parameters qp = new Parameters();
+    Parameters qp = Parameters.instance();
     Node query = StructuredQuery.parse(text);
     Node xquery = ret.transformQuery(query, qp);
     System.out.println(xquery);

@@ -6,7 +6,7 @@ import org.lemurproject.galago.core.eval.QuerySetJudgments;
 import org.lemurproject.galago.core.eval.metric.QueryEvaluator;
 import org.lemurproject.galago.core.eval.metric.QueryEvaluatorFactory;
 import org.lemurproject.galago.core.retrieval.ScoredDocument;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +23,7 @@ public class EasyEval {
     final QueryJudgments qj = qsj.get(qid);
     final QueryResults qres = new QueryResults(qid, docs);
     for(String metric : metrics) {
-      QueryEvaluator qeval = QueryEvaluatorFactory.instance(metric, new Parameters());
+      QueryEvaluator qeval = QueryEvaluatorFactory.instance(metric, Parameters.instance());
       double score = qeval.evaluate(qres, qj);
       metricValues.put(metric, score);
     }
@@ -32,7 +32,7 @@ public class EasyEval {
 
   public static double singleQuery(List<ScoredDocument> results, String qid, QuerySetJudgments qrels, String metric) {
     QueryResults res = new QueryResults(qid, results);
-    QueryEvaluator evaluator = QueryEvaluatorFactory.instance(metric, new Parameters());
+    QueryEvaluator evaluator = QueryEvaluatorFactory.instance(metric, Parameters.instance());
     return evaluator.evaluate(res, qrels.get(qid));
   }
 }

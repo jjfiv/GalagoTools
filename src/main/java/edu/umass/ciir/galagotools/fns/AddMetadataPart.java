@@ -6,7 +6,7 @@ import org.lemurproject.galago.core.btree.simple.DiskMapWrapper;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.tools.AppFunction;
-import org.lemurproject.galago.tupleflow.Parameters;
+import org.lemurproject.galago.utility.Parameters;
 import org.lemurproject.galago.tupleflow.Utility;
 
 import java.io.File;
