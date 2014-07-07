@@ -34,6 +34,7 @@ public class TarToZipConverter extends AppFunction {
   public void run(Parameters p, PrintStream output) throws Exception {
     TarArchiveInputStream tais = new TarArchiveInputStream(new FileInputStream(p.getString("input")));
     ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(p.getString("output")));
+    boolean quiet = p.get("quiet", false);
 
     while(true) {
       TarArchiveEntry tarEntry = tais.getNextTarEntry();
@@ -41,7 +42,9 @@ public class TarToZipConverter extends AppFunction {
       if(!tarEntry.isFile()) continue;
       if(!tais.canReadEntryData(tarEntry)) continue;
 
-      ZipEntry forData = new ZipEntry(tarEntry.getFile().getPath());
+      if(!quiet) System.err.println("# "+tarEntry.getName());
+
+      ZipEntry forData = new ZipEntry(tarEntry.getName());
       forData.setSize(tarEntry.getSize());
       zos.putNextEntry(forData);
       StreamUtil.copyStream(tais, zos);
