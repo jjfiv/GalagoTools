@@ -1,9 +1,6 @@
 package edu.umass.ciir.galagotools;
 
-import edu.umass.ciir.galagotools.fns.AddMetadataPart;
-import edu.umass.ciir.galagotools.fns.AppFnRunner;
-import edu.umass.ciir.galagotools.fns.FindInterestingTerms;
-import edu.umass.ciir.galagotools.fns.RandomlySampleDocuments;
+import edu.umass.ciir.galagotools.fns.*;
 import org.lemurproject.galago.core.tools.App;
 import org.lemurproject.galago.core.tools.AppFunction;
 
@@ -11,6 +8,7 @@ public class Main {
   static AppFunction fns[] = new AppFunction[] {
       new RandomlySampleDocuments(),
       new FindInterestingTerms(),
+      new TarToZipConverter(),
       new AddMetadataPart()
   };
 
