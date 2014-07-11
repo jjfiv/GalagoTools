@@ -151,6 +151,21 @@ public class Util {
     existing.add(value);
   }
 
+  public static <K,T> void extendSetInMap(Map<K,Set<T>> inMap, K key, T value) {
+    Set<T> existing = inMap.get(key);
+    if(existing == null) {
+      existing = new HashSet<T>();
+      inMap.put(key, existing);
+    }
+    existing.add(value);
+  }
+
+  public static <T extends Comparable> List<T> sorted(Collection<T> input) {
+    List<T> sortable = new ArrayList<T>(input);
+    Collections.sort(sortable);
+    return sortable;
+  }
+
   public static interface Transform<A,B> {
     public B process(A input) throws Exception;
   }
