@@ -102,8 +102,18 @@ public class StrUtilTest {
   }
 
   @Test
-  public void removeBack() {
+  public void removePrefixAndOrSuffix() {
+    // removeBack
     assertEquals("Hello", StrUtil.removeBack("Hello.html", ".html"));
     assertEquals("foo", StrUtil.removeBack("foo.foo", ".foo"));
+
+    // removeFront
+    assertEquals("foo>", StrUtil.removeFront("<foo>", "<"));
+    assertEquals(">", StrUtil.removeFront("<foo>", "<foo"));
+
+    //remove Surrounding
+    // removeFront
+    assertEquals("foo", StrUtil.removeSurrounding("<foo>", "<", ">"));
+    assertEquals("foo", StrUtil.removeSurrounding("\"foo\"", "\"", "\""));
   }
 }

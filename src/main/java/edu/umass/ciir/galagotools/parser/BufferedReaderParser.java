@@ -1,5 +1,6 @@
 package edu.umass.ciir.galagotools.parser;
 
+import edu.umass.ciir.galagotools.utils.IO;
 import org.lemurproject.galago.core.parse.DocumentStreamParser;
 import org.lemurproject.galago.core.types.DocumentSplit;
 import org.lemurproject.galago.utility.Parameters;
@@ -23,9 +24,7 @@ public abstract class BufferedReaderParser extends DocumentStreamParser {
 
   @Override
   public void close() throws IOException {
-    if(reader != null) {
-      reader.close();
-      reader = null;
-    }
+    IO.close(reader);
+    reader = null;
   }
 }

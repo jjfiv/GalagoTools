@@ -237,9 +237,22 @@ public class StrUtil {
   }
 
   /** Remove ending from input string */
-  public static String removeBack(String input, String ending) {
-    if(!input.endsWith(ending)) return input;
-    return input.substring(0, input.length() - ending.length());
+  public static String removeBack(String input, String suffix) {
+    if(!input.endsWith(suffix)) return input;
+    return input.substring(0, input.length() - suffix.length());
+  }
+
+  /** Remove prefix from input string */
+  public static String removeFront(String input, String prefix) {
+    if(!input.startsWith(prefix)) return input;
+    return input.substring(prefix.length());
+  }
+
+  /** Remove prefix and suffix from input string */
+  public static String removeSurrounding(String input, String prefix, String suffix) {
+    if(!input.endsWith(suffix)) return removeFront(input, prefix);
+    if(!input.startsWith(prefix)) return removeBack(input, suffix);
+    return input.substring(prefix.length(), input.length() - suffix.length());
   }
 
   public static interface Transform {
