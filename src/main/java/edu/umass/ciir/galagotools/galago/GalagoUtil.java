@@ -1,6 +1,7 @@
 package edu.umass.ciir.galagotools.galago;
 
 import edu.umass.ciir.galagotools.callback.Operation;
+import org.lemurproject.galago.core.index.Index;
 import org.lemurproject.galago.core.index.KeyIterator;
 import org.lemurproject.galago.core.index.corpus.CorpusReader;
 import org.lemurproject.galago.core.index.corpus.CorpusReaderSource;
@@ -8,6 +9,8 @@ import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.index.source.DataSource;
 import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.parse.DocumentStreamParser;
+import org.lemurproject.galago.core.retrieval.LocalRetrieval;
+import org.lemurproject.galago.core.retrieval.Retrieval;
 import org.lemurproject.galago.core.retrieval.ScoredDocument;
 import org.lemurproject.galago.core.retrieval.iterator.DataIterator;
 import org.lemurproject.galago.core.retrieval.processing.ScoringContext;
@@ -54,6 +57,19 @@ public class GalagoUtil {
       action.process(doc);
       corpusReaderSource.movePast(curId);
     }
+  }
+
+  public static List<String> names(Retrieval ret) throws IOException {
+    ArrayList<String> out = new ArrayList<String>();
+    assert(ret instanceof LocalRetrieval);
+    Index index = ((LocalRetrieval) ret).getIndex();
+    int numNames = (int) index.getIndexPart("names").getManifest().getLong("keyCount");
+    out.ensureCapacity(numNames);
+
+    for (String name : asIterable(index.getNamesIterator())) {
+      out.add(name);
+    }
+    return out;
   }
 
   public static List<String> names(List<ScoredDocument> documents) {
