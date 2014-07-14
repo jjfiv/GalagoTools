@@ -17,6 +17,11 @@ public class StrUtilTest {
   }
 
   @Test
+  public void testTake() {
+    assertEquals("contents", StrUtil.takeBetween("Not useful <text>contents</text> is here!", "<text>", "</text>"));
+  }
+
+  @Test
   public void testRemoveBetweenNested() throws Exception {
     String testInput = "nested/* /* nested comments are */ difficult */comments";
     assertEquals("nestedcomments", StrUtil.removeBetweenNested(testInput, "/*", "*/"));

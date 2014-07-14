@@ -159,6 +159,10 @@ public class StrUtil {
     return input.substring(pos + delim.length());
   }
 
+  public static String takeBetween(String input, String prefix, String suffix) {
+    return takeAfter(takeBefore(input, suffix), prefix);
+  }
+
   public static String preview(String input, int len) {
     if(input.length() < len) {
       return input;
