@@ -8,6 +8,7 @@ import org.lemurproject.galago.core.index.corpus.CorpusReaderSource;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.index.source.DataSource;
 import org.lemurproject.galago.core.parse.Document;
+import org.lemurproject.galago.core.parse.DocumentSource;
 import org.lemurproject.galago.core.parse.DocumentStreamParser;
 import org.lemurproject.galago.core.retrieval.LocalRetrieval;
 import org.lemurproject.galago.core.retrieval.Retrieval;
@@ -15,9 +16,13 @@ import org.lemurproject.galago.core.retrieval.ScoredDocument;
 import org.lemurproject.galago.core.retrieval.iterator.DataIterator;
 import org.lemurproject.galago.core.retrieval.processing.ScoringContext;
 import org.lemurproject.galago.core.types.DocumentSplit;
+import org.lemurproject.galago.core.util.DocumentSplitFactory;
+import org.lemurproject.galago.utility.Parameters;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,9 +38,7 @@ public class GalagoUtil {
   }
 
   public static DocumentSplit split(String path) {
-    DocumentSplit split = new DocumentSplit();
-    split.fileName = path;
-    return split;
+    return DocumentSplitFactory.file(path);
   }
 
   public static void forEachDocument(DocumentStreamParser parser, Operation<Document> action) throws IOException {
@@ -159,6 +162,20 @@ public class GalagoUtil {
 
     CorpusReaderSource source = corpus.getIterator().getSource(opts);
     return asIterable(source);
+  }
+
+  /** Do processing similar to that found in DocumentSource.run() of Galago */
+  public static List<DocumentSplit> getDocumentSplits(Collection<String> inputPaths, Parameters argp) throws IOException {
+    List<DocumentSplit> inputs = new ArrayList<DocumentSplit>(inputPaths.size());
+    for (String inputPath : inputPaths) {
+      File fp = new File(inputPath);
+      if(fp.isDirectory()) {
+        inputs.addAll(DocumentSource.processDirectory(fp, argp));
+      } else if(fp.isFile()) {
+        inputs.addAll(DocumentSource.processFile(fp, argp));
+      }
+    }
+    return inputs;
   }
 }
 
