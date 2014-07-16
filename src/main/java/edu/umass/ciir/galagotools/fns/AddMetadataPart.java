@@ -6,8 +6,8 @@ import org.lemurproject.galago.core.btree.simple.DiskMapWrapper;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.tools.AppFunction;
+import org.lemurproject.galago.utility.ByteUtil;
 import org.lemurproject.galago.utility.Parameters;
-import org.lemurproject.galago.tupleflow.Utility;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -43,7 +43,7 @@ public class AddMetadataPart extends AppFunction {
       if(doc != null) {
         String value = doc.metadata.get(field);
         if(value != null) {
-          diskMapBuilder.put(Utility.fromString(doc.name), Utility.fromString(value));
+          diskMapBuilder.put(ByteUtil.fromString(doc.name), ByteUtil.fromString(value));
         }
       }
 

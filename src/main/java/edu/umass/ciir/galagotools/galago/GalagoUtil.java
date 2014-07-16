@@ -19,6 +19,7 @@ import org.lemurproject.galago.core.types.DocumentSplit;
 import org.lemurproject.galago.core.util.DocumentSplitFactory;
 import org.lemurproject.galago.utility.Parameters;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -176,6 +177,56 @@ public class GalagoUtil {
       }
     }
     return inputs;
+  }
+
+  public static Iterable<Document> documentsStreamIterable(final DocumentStreamParser parser) {
+    return new Iterable<Document>() {
+      @Override
+      public Iterator<Document> iterator() {
+        try {
+          return new DocumentStreamIterator(parser);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    };
+  }
+
+
+  private static class DocumentStreamIterator implements Iterator<Document>, Closeable {
+    private DocumentStreamParser parser;
+    private Document current;
+
+    public DocumentStreamIterator(DocumentStreamParser parser) throws IOException {
+      this.parser = parser;
+      this.current = parser.nextDocument();
+    }
+
+    @Override
+    public boolean hasNext() {
+      return current != null;
+    }
+
+    @Override
+    public Document next() {
+      Document prev = current;
+      try {
+        current = parser.nextDocument();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      return prev;
+    }
+
+    @Override
+    public void remove() {
+      throw new UnsupportedOperationException("Read-only iterator!");
+    }
+
+    @Override
+    public void close() throws IOException {
+      parser.close();
+    }
   }
 }
 

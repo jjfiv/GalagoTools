@@ -1,6 +1,6 @@
 package edu.umass.ciir.galagotools.utils;
 
-import org.lemurproject.galago.tupleflow.StreamCreator;
+import org.lemurproject.galago.utility.StreamCreator;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;

@@ -1,8 +1,8 @@
 package edu.umass.ciir.galagotools.utils;
 
-import org.lemurproject.galago.tupleflow.FileUtility;
-import org.lemurproject.galago.tupleflow.StreamCreator;
-import org.lemurproject.galago.tupleflow.Utility;
+import org.lemurproject.galago.utility.FSUtil;
+import org.lemurproject.galago.utility.StreamCreator;
+import org.lemurproject.galago.utility.StreamUtil;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -97,7 +97,7 @@ public class IO {
     InputStream is = null;
     try {
       is = StreamCreator.realInputStream(from);
-      Utility.copyStreamToFile(is, new File(to));
+      StreamUtil.copyStreamToFile(is, new File(to));
       is = null;
     } catch (IOException e) {
       e.printStackTrace();
@@ -122,7 +122,7 @@ public class IO {
   }
 
   public static PrintWriter printWriter(String output) throws IOException {
-    FileUtility.makeParentDirectories(output);
+    FSUtil.makeParentDirectories(output);
     return new PrintWriter(StreamCreator.openOutputStream(output));
   }
 
