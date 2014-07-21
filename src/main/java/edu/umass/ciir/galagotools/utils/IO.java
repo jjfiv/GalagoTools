@@ -122,8 +122,12 @@ public class IO {
   }
 
   public static PrintWriter printWriter(String output) throws IOException {
+    return new PrintWriter(printStream(output));
+  }
+
+  public static PrintStream printStream(String output) throws IOException {
     FSUtil.makeParentDirectories(output);
-    return new PrintWriter(StreamCreator.openOutputStream(output));
+    return new PrintStream(StreamCreator.openOutputStream(output), true, "UTF-8");
   }
 
   public static InputStream stringStream(String input) {

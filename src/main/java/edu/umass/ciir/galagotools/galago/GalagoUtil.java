@@ -193,6 +193,8 @@ public class GalagoUtil {
   }
 
 
+
+
   private static class DocumentStreamIterator implements Iterator<Document>, Closeable {
     private DocumentStreamParser parser;
     private Document current;
