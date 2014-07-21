@@ -122,6 +122,9 @@ public class IO {
   }
 
   public static PrintWriter printWriter(String output) throws IOException {
+    if(output.equals("-"))
+      return new PrintWriter(System.out);
+
     FSUtil.makeParentDirectories(output);
     return new PrintWriter(StreamCreator.openOutputStream(output));
   }
