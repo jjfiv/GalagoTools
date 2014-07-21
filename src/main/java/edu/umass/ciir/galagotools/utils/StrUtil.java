@@ -259,6 +259,16 @@ public class StrUtil {
     return input.substring(prefix.length(), input.length() - suffix.length());
   }
 
+  public static boolean containsAscii(String title) {
+    for (int i = 0; i < title.length(); i++) {
+      int code = title.codePointAt(i);
+      if(code < 128) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static interface Transform {
     public String process(String input);
   }
