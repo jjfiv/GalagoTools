@@ -126,6 +126,8 @@ public class IO {
   }
 
   public static PrintStream printStream(String output) throws IOException {
+    if(output.equals("-"))
+      return System.out;
     FSUtil.makeParentDirectories(output);
     return new PrintStream(StreamCreator.openOutputStream(output), true, "UTF-8");
   }
