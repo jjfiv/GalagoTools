@@ -4,6 +4,7 @@ import org.lemurproject.galago.tupleflow.FileUtility;
 import org.lemurproject.galago.utility.Parameters;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -11,7 +12,7 @@ import java.util.*;
  */
 public class Util {
   public static List<File> getChildrenRecursively(File path) {
-    List<File> results = new ArrayList<File>();
+    List<File> results = new ArrayList<>();
     if(path.isDirectory()) {
       for(File fp : FileUtility.safeListFiles(path)) {
         results.addAll(getChildrenRecursively(fp));
@@ -23,7 +24,7 @@ public class Util {
   }
 
   public static List<File> checkAndExpandPaths(List<String> paths) {
-    List<File> results = new ArrayList<File>(paths.size());
+    List<File> results = new ArrayList<>(paths.size());
     for(String path : paths) {
       File fp = new File(path);
       if(!fp.exists())
@@ -35,7 +36,7 @@ public class Util {
   }
 
   public static List<File> collectLines(List<File> files) {
-    final ArrayList<File> paths = new ArrayList<File>();
+    final ArrayList<File> paths = new ArrayList<>();
     IO.StringFunctor pathCollector = new IO.StringFunctor() {
       @Override
       public void process(String input) {
@@ -57,7 +58,7 @@ public class Util {
   }
 
   public static <T> List<T> take(List<T> input, int count) {
-    List<T> output = new ArrayList<T>(count);
+    List<T> output = new ArrayList<>(count);
     for(int i=0; i<count && i<input.size(); i++) {
       output.add(input.get(i));
     }
@@ -83,6 +84,16 @@ public class Util {
     return input.iterator().next();
   }
 
+  public static <K,V> V firstValue(Map<K,V> input) {
+    if(input.isEmpty()) return null;
+    return input.values().iterator().next();
+  }
+
+  public static <K,V> K firstKey(Map<K,V> input) {
+    if(input.isEmpty()) return null;
+    return input.keySet().iterator().next();
+  }
+
   public static <T> T first(List<T> input) {
     if(input.isEmpty()) return null;
     return input.get(0);
@@ -92,7 +103,7 @@ public class Util {
     if(input.size() < 2) {
       return Collections.emptyList();
     }
-    return new ArrayList<T>(input.subList(1, input.size()));
+    return new ArrayList<>(input.subList(1, input.size()));
   }
 
   public static <T> Set<T> intersection(List<Set<T>> sets) {
@@ -109,7 +120,7 @@ public class Util {
     Set<T> minSet = lhs.size() < rhs.size() ? lhs : rhs;
     Set<T> maxSet = lhs.size() < rhs.size() ? rhs : lhs;
 
-    HashSet<T> isect = new HashSet<T>();
+    HashSet<T> isect = new HashSet<>();
     for(T x : minSet) {
       if(maxSet.contains(x)) {
         isect.add(x);
@@ -131,7 +142,7 @@ public class Util {
   @SuppressWarnings("unchecked")
   public static <T> void extendList(Parameters p, String key, Class<T> klazz, T value) {
     if(!p.isList(key)) {
-      List<T> lst = new ArrayList<T>();
+      List<T> lst = new ArrayList<>();
       boolean hasOriginal = p.containsKey(key);
       if(hasOriginal) {
         lst.add((T) p.get(key));
@@ -145,7 +156,7 @@ public class Util {
   public static <K,T> void extendListInMap(Map<K,List<T>> inMap, K key, T value) {
     List<T> existing = inMap.get(key);
     if(existing == null) {
-      existing = new ArrayList<T>();
+      existing = new ArrayList<>();
       inMap.put(key, existing);
     }
     existing.add(value);
@@ -154,14 +165,14 @@ public class Util {
   public static <K,T> void extendSetInMap(Map<K,Set<T>> inMap, K key, T value) {
     Set<T> existing = inMap.get(key);
     if(existing == null) {
-      existing = new HashSet<T>();
+      existing = new HashSet<>();
       inMap.put(key, existing);
     }
     existing.add(value);
   }
 
   public static <T extends Comparable> List<T> sorted(Collection<T> input) {
-    List<T> sortable = new ArrayList<T>(input);
+    List<T> sortable = new ArrayList<>(input);
     Collections.sort(sortable);
     return sortable;
   }
@@ -171,7 +182,7 @@ public class Util {
   }
 
   public static <T,U> List<U> map(List<T> input, Transform<T,U> transform) {
-    ArrayList<U> output = new ArrayList<U>(input.size());
+    ArrayList<U> output = new ArrayList<>(input.size());
     for(T x : input) {
       try {
         output.add(transform.process(x));
@@ -189,10 +200,10 @@ public class Util {
     if(numBatches * batchSize < numElements) {
       numBatches++;
     }
-    List<List<T>> batched = new ArrayList<List<T>>();
+    List<List<T>> batched = new ArrayList<>();
 
     for(int i=0; i<numBatches; i++) {
-      List<T> currentBatch = new ArrayList<T>();
+      List<T> currentBatch = new ArrayList<>();
       for(int j=0; j<batchSize; j++) {
         int raw = i*batchSize + j;
         if(raw >= numElements) break;
@@ -204,4 +215,55 @@ public class Util {
     return batched;
   }
 
+  public static class OneShotIterable<T> implements Iterable<T> {
+    private Iterator<T> iter;
+    public OneShotIterable(Iterator<T> iter) {
+      this.iter = iter;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+      if(iter == null) throw new IllegalStateException("Can't use a OneShotIterable twice!");
+      Iterator<T> prev = iter;
+      iter = null;
+      return prev;
+    }
+  }
+
+  public static interface UntilNullGenerator<T> {
+    public T next() throws IOException;
+  }
+
+  public static abstract class ReadOnlyIterator<T> implements Iterator<T> {
+    @Override
+    public void remove() {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  public static class UntilNullIterator<T> extends ReadOnlyIterator<T> {
+    public final UntilNullGenerator<T> generator;
+    public T nextValue;
+
+    public UntilNullIterator(UntilNullGenerator<T> generator) throws IOException {
+      this.generator = generator;
+      this.nextValue = generator.next();
+    }
+
+    @Override
+    public boolean hasNext() {
+      return nextValue != null;
+    }
+
+    @Override
+    public T next() {
+      try {
+        T prevValue = nextValue;
+        nextValue = generator.next();
+        return prevValue;
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
 }

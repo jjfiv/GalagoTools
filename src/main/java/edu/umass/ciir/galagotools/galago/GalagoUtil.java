@@ -1,6 +1,7 @@
 package edu.umass.ciir.galagotools.galago;
 
 import edu.umass.ciir.galagotools.callback.Operation;
+import edu.umass.ciir.galagotools.utils.Util;
 import org.lemurproject.galago.core.index.Index;
 import org.lemurproject.galago.core.index.KeyIterator;
 import org.lemurproject.galago.core.index.corpus.CorpusReader;
@@ -19,6 +20,7 @@ import org.lemurproject.galago.core.types.DocumentSplit;
 import org.lemurproject.galago.core.util.DocumentSplitFactory;
 import org.lemurproject.galago.utility.Parameters;
 
+import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +56,14 @@ public class GalagoUtil {
     }
   }
 
+  public static void readEach(List<DocumentSplit> splits, Operation<BufferedReader> action) throws IOException {
+    for (DocumentSplit split : splits) {
+      try (BufferedReader reader = DocumentStreamParser.getBufferedReader(split)) {
+        action.process(reader);
+      }
+    }
+  }
+
   public static void forCorpusDocument(CorpusReaderSource corpusReaderSource, Operation<Document> action) throws IOException {
     while(!corpusReaderSource.isDone()) {
       long curId = corpusReaderSource.currentCandidate();
@@ -64,7 +74,7 @@ public class GalagoUtil {
   }
 
   public static List<String> names(Retrieval ret) throws IOException {
-    ArrayList<String> out = new ArrayList<String>();
+    ArrayList<String> out = new ArrayList<>();
     assert(ret instanceof LocalRetrieval);
     Index index = ((LocalRetrieval) ret).getIndex();
     int numNames = (int) index.getIndexPart("names").getManifest().getLong("keyCount");
@@ -77,7 +87,7 @@ public class GalagoUtil {
   }
 
   public static List<String> names(List<ScoredDocument> documents) {
-    ArrayList<String> names = new ArrayList<String>(documents.size());
+    ArrayList<String> names = new ArrayList<>(documents.size());
     for(ScoredDocument sdoc : documents) {
       names.add(sdoc.documentName);
     }
@@ -124,7 +134,7 @@ public class GalagoUtil {
   }
 
   private static <T> Iterator<T> asIterator(final DataSource<T> source) {
-    return new Iterator<T>() {
+    return new Util.ReadOnlyIterator<T>() {
       @Override
       public boolean hasNext() {
         return !source.isDone();
@@ -140,11 +150,6 @@ public class GalagoUtil {
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
-      }
-
-      @Override
-      public void remove() {
-        throw new UnsupportedOperationException("Read-only iterator");
       }
     };
   }
@@ -167,7 +172,7 @@ public class GalagoUtil {
 
   /** Do processing similar to that found in DocumentSource.run() of Galago */
   public static List<DocumentSplit> getDocumentSplits(Collection<String> inputPaths, Parameters argp) throws IOException {
-    List<DocumentSplit> inputs = new ArrayList<DocumentSplit>(inputPaths.size());
+    List<DocumentSplit> inputs = new ArrayList<>(inputPaths.size());
     for (String inputPath : inputPaths) {
       File fp = new File(inputPath);
       if(fp.isDirectory()) {
@@ -195,7 +200,7 @@ public class GalagoUtil {
 
 
 
-  private static class DocumentStreamIterator implements Iterator<Document>, Closeable {
+  private static class DocumentStreamIterator extends Util.ReadOnlyIterator<Document> implements Closeable {
     private DocumentStreamParser parser;
     private Document current;
 
@@ -211,18 +216,13 @@ public class GalagoUtil {
 
     @Override
     public Document next() {
-      Document prev = current;
       try {
+        Document prev = current;
         current = parser.nextDocument();
+        return prev;
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-      return prev;
-    }
-
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException("Read-only iterator!");
     }
 
     @Override

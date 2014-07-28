@@ -273,4 +273,18 @@ public class StrUtil {
     public String process(String input);
   }
 
+  public static String[] pretendTokenize(String input) {
+    String cleaned = input
+      .toLowerCase()
+      .replaceAll("<script[^>]*>[^<]*</script>", " ")
+      .replaceAll("<style[^>]*>[^<]*</style>", " ")
+      .replaceAll("<!--.*-->", "")
+      .replaceAll("&nbsp;", " ")
+      .replaceAll("<[^>]*>", " ")
+      .replaceAll("\\p{Punct}", " ")
+      .replace(']', ' ')
+      .replace('?', ' ')
+      .replaceAll("^\\p{Alnum}", " ");
+    return StrUtil.filterToAscii(cleaned).split("\\s+");
+  }
 }

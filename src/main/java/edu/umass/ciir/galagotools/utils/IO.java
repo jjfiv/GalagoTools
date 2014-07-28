@@ -25,10 +25,7 @@ public class IO {
   }
 
   public static void forEachLine(File fp, StringFunctor doWhat) {
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new InputStreamReader(StreamCreator.openInputStream(fp)));
-
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(StreamCreator.openInputStream(fp)))) {
       while(true) {
         String line = reader.readLine();
         if(line == null) break;
@@ -36,8 +33,6 @@ public class IO {
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
-    } finally {
-      close(reader);
     }
   }
 
@@ -94,15 +89,10 @@ public class IO {
   }
 
   public static void copyFile(String from, String to) {
-    InputStream is = null;
-    try {
-      is = StreamCreator.realInputStream(from);
+    try (InputStream is = StreamCreator.realInputStream(from)) {
       StreamUtil.copyStreamToFile(is, new File(to));
-      is = null;
     } catch (IOException e) {
       e.printStackTrace();
-    } finally {
-      close(is);
     }
   }
 
