@@ -18,7 +18,8 @@ public class IterUtils {
 
   public static void addToParameters(Parameters argp, Class<? extends Traversal> traversalClass) {
     Util.extendList(argp, "traversals", Parameters.class, Parameters.parseArray(
-      "name", traversalClass.getName()
+      "name", traversalClass.getName(),
+      "order", "before"
     ));
   }
 }
