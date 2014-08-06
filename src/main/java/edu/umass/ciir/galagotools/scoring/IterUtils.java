@@ -1,6 +1,8 @@
 package edu.umass.ciir.galagotools.scoring;
 
+import edu.umass.ciir.galagotools.utils.Util;
 import org.lemurproject.galago.core.retrieval.iterator.BaseIterator;
+import org.lemurproject.galago.core.retrieval.traversal.Traversal;
 import org.lemurproject.galago.utility.Parameters;
 
 /**
@@ -12,5 +14,11 @@ public class IterUtils {
       p.put("operators", Parameters.instance());
     }
     p.getMap("operators").put(name, iterClass.getName());
+  }
+
+  public static void addToParameters(Parameters argp, Class<? extends Traversal> traversalClass) {
+    Util.extendList(argp, "traversals", Parameters.class, Parameters.parseArray(
+      "name", traversalClass.getName()
+    ));
   }
 }
