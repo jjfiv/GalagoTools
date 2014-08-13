@@ -1,5 +1,6 @@
 package edu.umass.ciir.galagotools.utils;
 
+import org.lemurproject.galago.utility.ByteUtil;
 import org.lemurproject.galago.utility.FSUtil;
 import org.lemurproject.galago.utility.StreamCreator;
 import org.lemurproject.galago.utility.StreamUtil;
@@ -24,8 +25,21 @@ public class IO {
     }
   }
 
+  public static void forEachLine(InputStream is, StringFunctor doWhat) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, ByteUtil.utf8))) {
+      while(true) {
+        String line = reader.readLine();
+        if(line == null) break;
+        doWhat.process(line);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
   public static void forEachLine(File fp, StringFunctor doWhat) {
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(StreamCreator.openInputStream(fp)))) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(StreamCreator.openInputStream(fp), ByteUtil.utf8))) {
       while(true) {
         String line = reader.readLine();
         if(line == null) break;
