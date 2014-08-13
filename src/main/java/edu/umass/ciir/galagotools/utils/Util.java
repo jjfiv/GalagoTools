@@ -177,6 +177,13 @@ public class Util {
     return sortable;
   }
 
+  public static <T> List<T> concat(Collection<T> first, Collection<T> second) {
+    ArrayList<T> full = new ArrayList<>();
+    full.addAll(first);
+    full.addAll(second);
+    return full;
+  }
+
   public static interface Transform<A,B> {
     public B process(A input) throws Exception;
   }
