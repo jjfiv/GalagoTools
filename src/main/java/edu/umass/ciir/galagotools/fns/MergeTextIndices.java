@@ -1,4 +1,4 @@
-package edu.umass.ciir.galagotools.spelling;
+package edu.umass.ciir.galagotools.fns;
 
 import edu.umass.ciir.galagotools.fns.AppFnRunner;
 import edu.umass.ciir.galagotools.galago.GalagoUtil;

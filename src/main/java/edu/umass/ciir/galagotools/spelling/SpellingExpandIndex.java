@@ -1,6 +1,7 @@
 package edu.umass.ciir.galagotools.spelling;
 
 import edu.umass.ciir.galagotools.fns.AppFnRunner;
+import edu.umass.ciir.galagotools.fns.MergeTextIndices;
 import edu.umass.ciir.jasmine.tupleflow.NameFieldText;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
