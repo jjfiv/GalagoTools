@@ -38,6 +38,17 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>edu.umass.ciir.snapshots</id>
+      <url>http://scm-ciir.cs.umass.edu:8080/nexus/content/repositories/snapshots</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>edu.umass.ciir.releases</id>
+      <url>http://scm-ciir.cs.umass.edu:8080/nexus/content/repositories/releases</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <dependencies>
 
     <dependency>
@@ -104,6 +115,21 @@
             <configuration>
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- tupleflow-typebuilder -->
+      <plugin>
+        <groupId>org.lemurproject.galago</groupId>
+        <artifactId>tupleflow-typebuilder</artifactId>
+        <version>${galagoVersion}</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>typebuilder</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

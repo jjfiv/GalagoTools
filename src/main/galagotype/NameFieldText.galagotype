@@ -1,0 +1,9 @@
+package edu.umass.ciir.jasmine.tupleflow;
+
+type NameFieldText {
+  String name;
+  String field;
+  String text;
+
+  order: +name +field; // by document name then by field
+}
