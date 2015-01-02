@@ -1,7 +1,7 @@
 package edu.umass.ciir.galagotools.utils;
 
 import org.lemurproject.galago.core.util.FixedSizeMinHeap;
-import org.lemurproject.galago.tupleflow.Utility;
+import org.lemurproject.galago.utility.CmpUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,7 +23,7 @@ public class RandUtil {
     public static final Comparator<RandomlyWeighted> byWeight = new Comparator<RandomlyWeighted>() {
       @Override
       public int compare(RandomlyWeighted lhs, RandomlyWeighted rhs) {
-        return Utility.compare(lhs.weight, rhs.weight);
+        return CmpUtil.compare(lhs.weight, rhs.weight);
       }
     };
   }

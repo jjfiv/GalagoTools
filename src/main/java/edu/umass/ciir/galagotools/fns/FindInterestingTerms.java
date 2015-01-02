@@ -102,7 +102,7 @@ public class FindInterestingTerms extends AppFunction {
 
     System.err.println("# counted: "+id+" numTerms: "+termCounts.size()+" kept: "+ngrams.size());
 
-    FixedSizeMinHeap<WeightedTerm> rankedTerms = new FixedSizeMinHeap<WeightedTerm>(WeightedTerm.class, (int) argp.get("requested", 25), new WeightedTerm.Comparator());
+    FixedSizeMinHeap<WeightedTerm> rankedTerms = new FixedSizeMinHeap<>(WeightedTerm.class, (int) argp.get("requested", 25), new WeightedTerm.Comparator());
 
     Retrieval ret = new LocalRetrieval(index);
     for(String ngram : ngrams) {
