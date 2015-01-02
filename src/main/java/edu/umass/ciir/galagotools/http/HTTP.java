@@ -1,5 +1,6 @@
 package edu.umass.ciir.galagotools.http;
 
+import edu.umass.ciir.galagotools.utils.Util;
 import org.lemurproject.galago.utility.Parameters;
 import org.lemurproject.galago.utility.StreamUtil;
 import org.lemurproject.galago.utility.json.JSONUtil;
@@ -32,7 +33,7 @@ public class HTTP {
 
 
   public static Parameters toJSON(HttpServletRequest req) throws IOException {
-    Parameters reqp = Parameters.instance();
+    Parameters reqp = Parameters.create();
 
     String contentType = req.getContentType();
     // chrome likes to send:
@@ -43,7 +44,7 @@ public class HTTP {
 
     // GET or POST form parameters handling
     if(contentType == null || "application/x-www-form-urlencoded".equals(contentType)) {
-      Map<String, String[]> asMap = (Map<String, String[]>) req.getParameterMap();
+      Map<String, String[]> asMap = Util.cast(req.getParameterMap());
 
       for (Map.Entry<String, String[]> kv : asMap.entrySet()) {
         String arg = kv.getKey();

@@ -5,9 +5,9 @@ import org.lemurproject.galago.core.btree.simple.DiskMapBuilder;
 import org.lemurproject.galago.core.btree.simple.DiskMapWrapper;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.parse.Document;
-import org.lemurproject.galago.core.tools.AppFunction;
 import org.lemurproject.galago.utility.ByteUtil;
 import org.lemurproject.galago.utility.Parameters;
+import org.lemurproject.galago.utility.tools.AppFunction;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -50,7 +50,7 @@ public class AddMetadataPart extends AppFunction {
     }
 
     diskMapBuilder.close();
-    DiskMapWrapper<String,String> data = new DiskMapWrapper<String,String>(output.getAbsolutePath(), new DiskMapWrapper.StringCodec(), new DiskMapWrapper.StringCodec());
+    DiskMapWrapper<String,String> data = new DiskMapWrapper<>(output.getAbsolutePath(), new DiskMapWrapper.StringCodec(), new DiskMapWrapper.StringCodec());
 
     out.println("Wrote "+data.size()+" metadata field="+field+" to "+output.getAbsolutePath());
     data.close();

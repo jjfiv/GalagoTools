@@ -11,7 +11,7 @@ import org.lemurproject.galago.utility.Parameters;
 public class IterUtils {
   public static void addToParameters(Parameters p, String name, Class<? extends BaseIterator> iterClass) {
     if(!p.containsKey("operators")) {
-      p.put("operators", Parameters.instance());
+      p.put("operators", Parameters.create());
     }
     p.getMap("operators").put(name, iterClass.getName());
   }

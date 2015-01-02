@@ -21,7 +21,7 @@ public class XMLTest {
         "<doc><title>Title2</title><body>Body2</body></doc>" +
         "</docs>";
 
-    final ArrayList<String> titles = new ArrayList<String>();
+    final ArrayList<String> titles = new ArrayList<>();
     XML.forFieldsInSections(IO.stringStream(testInput), "doc", Arrays.asList("title", "body"), new XML.FieldsFunctor() {
       @Override
       public void process(Map<String, String> fieldValues) {

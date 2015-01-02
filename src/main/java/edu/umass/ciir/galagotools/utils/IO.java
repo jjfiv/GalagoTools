@@ -92,7 +92,7 @@ public class IO {
   }
 
   public static List<String> slurpLines(String path) throws IOException {
-    final ArrayList<String> lines = new ArrayList<String>();
+    final ArrayList<String> lines = new ArrayList<>();
     forEachLine(new File(path), new StringFunctor() {
       @Override
       public void process(String input) {

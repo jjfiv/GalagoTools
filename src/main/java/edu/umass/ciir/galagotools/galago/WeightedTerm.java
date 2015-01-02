@@ -2,7 +2,7 @@ package edu.umass.ciir.galagotools.galago;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.lemurproject.galago.core.retrieval.query.Node;
-import org.lemurproject.galago.tupleflow.Utility;
+import org.lemurproject.galago.utility.CmpUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,13 @@ public class WeightedTerm implements Comparable<WeightedTerm> {
 
   @Override
   public int compareTo(WeightedTerm other) {
-    int byWeight = Utility.compare((int) (weight*1000000.0),(int) (other.weight*1000000.0));
-    if(byWeight == 0) return Utility.compare(term, other.term);
+    int byWeight = CmpUtil.compare((int) (weight * 1000000.0), (int) (other.weight * 1000000.0));
+    if(byWeight == 0) return CmpUtil.compare(term, other.term);
     return byWeight;
   }
 
   public static TObjectDoubleHashMap<String> makeMap() {
-    return new TObjectDoubleHashMap<String>();
+    return new TObjectDoubleHashMap<>();
   }
 
   public static Node toCombine(List<WeightedTerm> terms) {
@@ -56,7 +56,7 @@ public class WeightedTerm implements Comparable<WeightedTerm> {
   }
 
   public static List<String> words(List<WeightedTerm> terms) {
-    List<String> output = new ArrayList<String>();
+    List<String> output = new ArrayList<>();
     for (WeightedTerm term : terms) {
       output.add(term.term);
     }

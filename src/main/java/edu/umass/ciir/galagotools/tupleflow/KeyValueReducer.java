@@ -21,12 +21,12 @@ public abstract class KeyValueReducer<K,V> implements Reducer<KeyValuePair> {
 
   @Override
   public ArrayList<KeyValuePair> reduce(List<KeyValuePair> input) throws IOException {
-    ArrayList<KeyValuePair> results = new ArrayList<KeyValuePair>();
+    ArrayList<KeyValuePair> results = new ArrayList<>();
     if(input.isEmpty())
       return results;
 
     K lastKey = keyCodec.fromBytes(input.get(0).key);
-    ArrayList<V> values = new ArrayList<V>();
+    ArrayList<V> values = new ArrayList<>();
 
     for(KeyValuePair kv : input) {
       K curKey = keyCodec.fromBytes(kv.key);
@@ -35,7 +35,7 @@ public abstract class KeyValueReducer<K,V> implements Reducer<KeyValuePair> {
       } else {
         results.add(reduce(lastKey, values));
         lastKey = curKey;
-        values = new ArrayList<V>();
+        values = new ArrayList<>();
       }
     }
     results.add(reduce(lastKey, values));

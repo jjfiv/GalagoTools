@@ -5,11 +5,11 @@ import org.lemurproject.galago.core.index.corpus.CorpusReader;
 import org.lemurproject.galago.core.index.corpus.DocumentReader;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.parse.Document;
-import org.lemurproject.galago.core.tools.AppFunction;
 import org.lemurproject.galago.core.tools.apps.BuildIndex;
 import org.lemurproject.galago.tupleflow.FileUtility;
 import org.lemurproject.galago.tupleflow.Utility;
 import org.lemurproject.galago.utility.Parameters;
+import org.lemurproject.galago.utility.tools.AppFunction;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -28,9 +28,9 @@ public class SampleCorpus extends AppFunction {
   @Override
   public String getHelpString() {
     return makeHelpStr(
-      "output", "json lines document",
-      "input", "an index with a corpus part",
-      "length", "default=8k to take from front of index"
+        "output", "json lines document",
+        "input", "an index with a corpus part",
+        "length", "default=8k to take from front of index"
     );
   }
 
