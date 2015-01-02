@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * @author jfoley.
  */
-public class AppFnRunner {
+public final class AppFnRunner {
   public static void main(String[] args, Collection<AppFunction> fns) throws Exception {
     Parameters argp = Parameters.parseArgs(args);
     String whichFn = argp.getString("fn");
@@ -26,6 +26,7 @@ public class AppFnRunner {
     }
   }
 
+  @Deprecated
   public static String helpDescriptions(AppFunction fn, Parameters desc) {
     StringBuilder out = new StringBuilder();
     out.append(fn.getName()).append("\n\n");

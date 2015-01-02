@@ -26,11 +26,10 @@ public class MergeTextIndices extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return AppFnRunner.helpDescriptions(this,
-      Parameters.parseArray(
+    return makeHelpStr(
         "input", "map of indices to merge; e.g. --input/asr=asr.galago --input/ocr=ocr.galago",
         "output", "json per line documents to write out"
-      ));
+      );
   }
 
   public static class NFTDocumentWriter implements NameFieldText.NameFieldOrder.ShreddedProcessor {

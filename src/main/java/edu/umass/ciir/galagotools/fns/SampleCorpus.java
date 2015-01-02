@@ -27,11 +27,11 @@ public class SampleCorpus extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return AppFnRunner.helpDescriptions(this, Parameters.parseArray(
+    return makeHelpStr(
       "output", "json lines document",
       "input", "an index with a corpus part",
       "length", "default=8k to take from front of index"
-    ));
+    );
   }
 
   @Override

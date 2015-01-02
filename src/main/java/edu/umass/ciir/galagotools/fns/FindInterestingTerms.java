@@ -62,10 +62,10 @@ public class FindInterestingTerms extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return AppFnRunner.helpDescriptions(this, Parameters.parseArray(
+    return makeHelpStr(
         "index", "INDEX",
         "id", "document id"
-    ));
+    );
   }
 
   @Override
