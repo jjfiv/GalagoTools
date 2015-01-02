@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>edu.umass.ciir.galagotools</groupId>
   <artifactId>galagotools</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>jar</packaging>
   <name>galagotools</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <javaVersion>1.7</javaVersion>
-    <galagoVersion>3.7-SNAPSHOT</galagoVersion>
+    <galagoVersion>3.7</galagoVersion>
     <mainClass>edu.umass.ciir.galagotools.Main</mainClass>
   </properties>
 
