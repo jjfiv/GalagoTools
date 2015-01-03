@@ -1,5 +1,7 @@
 package edu.umass.ciir.galagotools.galago;
 
+import com.google.common.collect.Lists;
+import org.lemurproject.galago.core.eval.EvalDoc;
 import org.lemurproject.galago.core.eval.QueryJudgments;
 import org.lemurproject.galago.core.eval.QueryResults;
 import org.lemurproject.galago.core.eval.QuerySetJudgments;
@@ -21,7 +23,7 @@ public class EasyEval {
     assert(qsj.containsKey(qid));
     assert(!metrics.isEmpty());
     final QueryJudgments qj = qsj.get(qid);
-    final QueryResults qres = new QueryResults(qid, docs);
+    final QueryResults qres = new QueryResults(qid, Lists.<EvalDoc>newArrayList(docs));
     for(String metric : metrics) {
       QueryEvaluator qeval = QueryEvaluatorFactory.create(metric, Parameters.create());
       double score = qeval.evaluate(qres, qj);
@@ -31,7 +33,7 @@ public class EasyEval {
   }
 
   public static double singleQuery(List<ScoredDocument> results, String qid, QuerySetJudgments qrels, String metric) {
-    QueryResults res = new QueryResults(qid, results);
+    QueryResults res = new QueryResults(qid, Lists.<EvalDoc>newArrayList(results));
     QueryEvaluator evaluator = QueryEvaluatorFactory.create(metric, Parameters.create());
     return evaluator.evaluate(res, qrels.get(qid));
   }
