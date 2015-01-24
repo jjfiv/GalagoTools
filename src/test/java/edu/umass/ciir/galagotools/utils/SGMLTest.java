@@ -25,7 +25,7 @@ public class SGMLTest {
 
   @Test
   public void makeTagTest() {
-    Map<String,String> attrs = new HashMap<String,String>();
+    Map<String,String> attrs = new HashMap<>();
     attrs.put("bar", "baz");
     assertEquals("<foo bar=\"baz\"></foo>", SGML.makeTag("foo", attrs, ""));
     assertEquals("<foo bar=\"baz\"> data </foo>", SGML.makeTag("foo", attrs, "data"));

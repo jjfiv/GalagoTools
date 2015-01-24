@@ -11,7 +11,7 @@ public class UtilTest {
 
   @Test
   public void testPopLast() throws Exception {
-    ArrayList<Integer> data = new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
+    ArrayList<Integer> data = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
 
     assertEquals(5, (int) Util.popLast(data));
     assertEquals(4, (int) Util.popLast(data));
@@ -24,8 +24,8 @@ public class UtilTest {
 
   @Test
   public void testIntersection() {
-    Set<Integer> lhs = new HashSet<Integer>(Arrays.asList(1, 2, 3));
-    Set<Integer> rhs = new HashSet<Integer>(Arrays.asList(3, 4, 5));
+    Set<Integer> lhs = new HashSet<>(Arrays.asList(1, 2, 3));
+    Set<Integer> rhs = new HashSet<>(Arrays.asList(3, 4, 5));
     Set<Integer> isect = Util.intersection(lhs, rhs);
 
     assertEquals(1, isect.size());

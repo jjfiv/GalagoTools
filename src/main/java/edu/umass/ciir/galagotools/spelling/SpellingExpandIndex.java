@@ -12,9 +12,9 @@ import org.lemurproject.galago.core.retrieval.ScoredDocument;
 import org.lemurproject.galago.core.retrieval.iterator.DataIterator;
 import org.lemurproject.galago.core.retrieval.processing.ScoringContext;
 import org.lemurproject.galago.core.retrieval.query.Node;
-import org.lemurproject.galago.core.tools.AppFunction;
 import org.lemurproject.galago.tupleflow.Processor;
 import org.lemurproject.galago.utility.Parameters;
+import org.lemurproject.galago.utility.tools.AppFunction;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -31,13 +31,11 @@ public class SpellingExpandIndex extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return AppFnRunner.helpDescriptions(
-      this, Parameters.parseArray(
+    return makeHelpStr(
         "depth", "number of expansions to include",
         "index", "index to expand",
         "trigrams", "trigram dictionary index"
-      )
-    );
+      );
   }
 
   public static TLongObjectHashMap<String> loadNames(DiskIndex index) throws IOException {
@@ -78,7 +76,7 @@ public class SpellingExpandIndex extends AppFunction {
           combine.addChild(Node.Text(trigram));
         }
 
-        Parameters qp = Parameters.instance();
+        Parameters qp = Parameters.create();
         qp.set("requested", depth);
         Node xq = ret.transformQuery(combine, qp);
         List<ScoredDocument> docs = ret.executeQuery(xq, qp).scoredDocuments;

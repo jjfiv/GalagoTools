@@ -1,5 +1,7 @@
 package edu.umass.ciir.galagotools.container;
 
+import edu.umass.ciir.galagotools.utils.Util;
+
 import java.util.*;
 
 /**
@@ -10,7 +12,7 @@ public class ListBasedOrderedSet<T> implements Set<T> {
   public final List<T> list;
 
   public ListBasedOrderedSet() {
-    this.list = new ArrayList<T>();
+    this.list = new ArrayList<>();
   }
 
   @Override

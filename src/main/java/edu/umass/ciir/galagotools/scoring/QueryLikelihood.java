@@ -146,7 +146,7 @@ public class QueryLikelihood extends DisjunctionIterator implements ScoreIterato
 
   public static void executeAndTime(Retrieval ret, String op, String words) throws Exception {
     Node raw = StructuredQuery.parse(String.format("#%s( %s )", op, words));
-    Parameters qp = Parameters.instance();
+    Parameters qp = Parameters.create();
     //qp.put("processingModel", RankedDocumentModel.class.getName());
     qp.put("fast", true);
 

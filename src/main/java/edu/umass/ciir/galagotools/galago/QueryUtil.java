@@ -14,7 +14,7 @@ import java.util.*;
  * @author jfoley
  */
 public class QueryUtil {
-  public static final Set<String> customStop = new TreeSet<String>(Arrays.asList(new String[]{
+  public static final Set<String> customStop = new TreeSet<>(Arrays.asList(new String[]{
     "b", "d", "c", // born, died, circa
     "\u2013", // &ndash;
   }));
@@ -23,7 +23,7 @@ public class QueryUtil {
   public static Set<String> getStopwords() {
     if(stopwords == null) {
       try {
-        stopwords = new HashSet<String>();
+        stopwords = new HashSet<>();
         stopwords.addAll(WordLists.getWordList("inquery"));
         stopwords.addAll(customStop);
       } catch(IOException ioe) {
@@ -35,12 +35,18 @@ public class QueryUtil {
 
   public static Node genQuery(Collection<String> terms, String operation) {
     Node op;
-    if(operation.equals("combine") || operation.equals("ql")) {
-      op = new Node("combine");
-    } else if(operation.equals("sdm")) {
-      op = new Node("sdm");
-      //op.getNodeParameters().set("default", 20);
-    } else throw new NotHandledNow("queryOperation", operation);
+    switch (operation) {
+      case "combine":
+      case "ql":
+        op = new Node("combine");
+        break;
+      case "sdm":
+        op = new Node("sdm");
+        //op.getNodeParameters().set("default", 20);
+        break;
+      default:
+        throw new NotHandledNow("queryOperation", operation);
+    }
 
     for(String term : terms) {
       op.addChild(Node.Text(term));
@@ -55,7 +61,7 @@ public class QueryUtil {
     boolean stop = config.get("stopQueries", true);
     boolean removeDates = config.get("stopDates", true);
 
-    ArrayList<String> resultTerms = new ArrayList<String>(terms.size());
+    ArrayList<String> resultTerms = new ArrayList<>(terms.size());
     for(String term : terms) {
       if(keepTerm(term, stop, removeDates))
         resultTerms.add(term);
@@ -75,7 +81,7 @@ public class QueryUtil {
    * This function walks the query tree and collects all text nodes
    */
   public static List<String> termsFromQuery(Node query) {
-    final ArrayList<String> terms = new ArrayList<String>();
+    final ArrayList<String> terms = new ArrayList<>();
 
     Traversal collectTerms = new Traversal() {
       @Override
@@ -92,7 +98,7 @@ public class QueryUtil {
     };
 
     try {
-      collectTerms.traverse(query, Parameters.instance());
+      collectTerms.traverse(query, Parameters.create());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

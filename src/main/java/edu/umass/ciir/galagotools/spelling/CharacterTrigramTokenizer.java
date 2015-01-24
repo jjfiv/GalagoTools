@@ -25,7 +25,7 @@ public class CharacterTrigramTokenizer extends Tokenizer {
   }
 
   public CharacterTrigramTokenizer() {
-    super(new FakeParameters(Parameters.instance()));
+    super(new FakeParameters(Parameters.create()));
   }
 
   @Override

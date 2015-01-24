@@ -23,7 +23,7 @@ public class XML {
   }
 
   public static Map<String,String> getFields(XMLStreamReader xml, String endTag, List<String> fields) throws IOException, XMLStreamException {
-    HashMap<String,StringBuilder> builders = new HashMap<String,StringBuilder>();
+    HashMap<String,StringBuilder> builders = new HashMap<>();
     for(String field : fields) {
       builders.put(field, new StringBuilder());
     }
@@ -58,7 +58,7 @@ public class XML {
     }
 
     // finish off builders
-    HashMap<String,String> results = new HashMap<String,String>();
+    HashMap<String,String> results = new HashMap<>();
     for(Map.Entry<String,StringBuilder> kv : builders.entrySet()) {
       results.put(kv.getKey(), kv.getValue().toString());
     }
@@ -85,9 +85,7 @@ public class XML {
   public static org.w3c.dom.Document readFullXML(InputStream input) throws IOException {
     try {
       return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
-    } catch (SAXException e) {
-      throw new IOException(e);
-    }  catch (ParserConfigurationException e) {
+    } catch (SAXException | ParserConfigurationException e) {
       throw new IOException(e);
     }
   }

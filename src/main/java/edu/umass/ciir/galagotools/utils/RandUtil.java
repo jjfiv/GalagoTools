@@ -1,7 +1,7 @@
 package edu.umass.ciir.galagotools.utils;
 
-import org.lemurproject.galago.core.util.FixedSizeMinHeap;
-import org.lemurproject.galago.tupleflow.Utility;
+import org.lemurproject.galago.utility.CmpUtil;
+import org.lemurproject.galago.utility.FixedSizeMinHeap;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,21 +23,21 @@ public class RandUtil {
     public static final Comparator<RandomlyWeighted> byWeight = new Comparator<RandomlyWeighted>() {
       @Override
       public int compare(RandomlyWeighted lhs, RandomlyWeighted rhs) {
-        return Utility.compare(lhs.weight, rhs.weight);
+        return CmpUtil.compare(lhs.weight, rhs.weight);
       }
     };
   }
 
   /** fill a heap with randomly weighted elements as you go... */
   public static <T> List<T> sampleRandomly(Iterable<T> source, int count, Random rand) {
-    FixedSizeMinHeap<RandomlyWeighted> heap = new FixedSizeMinHeap<RandomlyWeighted>(RandomlyWeighted.class, count, RandomlyWeighted.byWeight);
+    FixedSizeMinHeap<RandomlyWeighted> heap = new FixedSizeMinHeap<>(RandomlyWeighted.class, count, RandomlyWeighted.byWeight);
 
     for(T newObj : source) {
       int weight = rand.nextInt();
-      heap.offer(new RandomlyWeighted<T>(newObj, weight));
+      heap.offer(new RandomlyWeighted<>(newObj, weight));
     }
 
-    ArrayList<T> output = new ArrayList<T>(count);
+    ArrayList<T> output = new ArrayList<>(count);
     for (RandomlyWeighted rw : heap.getSortedArray()) {
       output.add(Util.<T>cast(rw.obj));
     }

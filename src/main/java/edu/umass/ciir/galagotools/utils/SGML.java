@@ -57,7 +57,7 @@ public class SGML {
     Attributes attrs = el.attributes();
     if(attrs.size() == 0) return Collections.emptyMap();
 
-    HashMap<String,String> unorderedAttrs = new HashMap<String,String>();
+    HashMap<String,String> unorderedAttrs = new HashMap<>();
     for (Attribute attr : attrs.asList()) {
       unorderedAttrs.put(attr.getKey(), attr.getValue());
     }

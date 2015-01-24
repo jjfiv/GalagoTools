@@ -6,11 +6,11 @@ import edu.umass.ciir.galagotools.utils.IO;
 import edu.umass.ciir.jasmine.tupleflow.NameFieldText;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.parse.Document;
-import org.lemurproject.galago.core.tools.AppFunction;
 import org.lemurproject.galago.tupleflow.Processor;
 import org.lemurproject.galago.tupleflow.Sorter;
 import org.lemurproject.galago.tupleflow.error.IncompatibleProcessorException;
 import org.lemurproject.galago.utility.Parameters;
+import org.lemurproject.galago.utility.tools.AppFunction;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -26,11 +26,10 @@ public class MergeTextIndices extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return AppFnRunner.helpDescriptions(this,
-      Parameters.parseArray(
+    return makeHelpStr(
         "input", "map of indices to merge; e.g. --input/asr=asr.galago --input/ocr=ocr.galago",
         "output", "json per line documents to write out"
-      ));
+    );
   }
 
   public static class NFTDocumentWriter implements NameFieldText.NameFieldOrder.ShreddedProcessor {
@@ -66,7 +65,7 @@ public class MergeTextIndices extends AppFunction {
       if(name == null || text.length() == 0) {
         return;
       }
-      Parameters doc = Parameters.instance();
+      Parameters doc = Parameters.create();
       doc.put("text", text.toString());
       doc.put("name", name);
       out.println(doc.toString());

@@ -1,14 +1,14 @@
 package edu.umass.ciir.galagotools.fns;
 
-import org.lemurproject.galago.core.tools.AppFunction;
 import org.lemurproject.galago.utility.Parameters;
+import org.lemurproject.galago.utility.tools.AppFunction;
 
 import java.util.Collection;
 
 /**
  * @author jfoley.
  */
-public class AppFnRunner {
+public final class AppFnRunner {
   public static void main(String[] args, Collection<AppFunction> fns) throws Exception {
     Parameters argp = Parameters.parseArgs(args);
     String whichFn = argp.getString("fn");
@@ -26,6 +26,7 @@ public class AppFnRunner {
     }
   }
 
+  @Deprecated
   public static String helpDescriptions(AppFunction fn, Parameters desc) {
     StringBuilder out = new StringBuilder();
     out.append(fn.getName()).append("\n\n");

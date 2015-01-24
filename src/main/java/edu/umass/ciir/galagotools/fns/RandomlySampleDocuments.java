@@ -6,8 +6,8 @@ import edu.umass.ciir.galagotools.utils.RandUtil;
 import edu.umass.ciir.galagotools.utils.Util;
 import org.lemurproject.galago.core.index.disk.DiskIndex;
 import org.lemurproject.galago.core.parse.Document;
-import org.lemurproject.galago.core.tools.AppFunction;
 import org.lemurproject.galago.utility.Parameters;
+import org.lemurproject.galago.utility.tools.AppFunction;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -25,11 +25,11 @@ public class RandomlySampleDocuments extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return AppFnRunner.helpDescriptions(this, Parameters.parseArray(
+    return makeHelpStr(
         "index", "Galago Index",
         "n", "number of documents to sample",
         "output", "the output file to write (try out.docjson.gz)"
-    ));
+    );
   }
 
   @Override

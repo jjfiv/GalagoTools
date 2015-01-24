@@ -9,10 +9,10 @@ import org.lemurproject.galago.core.parse.Document;
 import org.lemurproject.galago.core.retrieval.LocalRetrieval;
 import org.lemurproject.galago.core.retrieval.Retrieval;
 import org.lemurproject.galago.core.retrieval.query.Node;
-import org.lemurproject.galago.core.tools.AppFunction;
-import org.lemurproject.galago.core.util.FixedSizeMinHeap;
 import org.lemurproject.galago.core.util.WordLists;
+import org.lemurproject.galago.utility.FixedSizeMinHeap;
 import org.lemurproject.galago.utility.Parameters;
+import org.lemurproject.galago.utility.tools.AppFunction;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class FindInterestingTerms extends AppFunction {
   }
 
   public void unigrams(Document doc, String id, Parameters argp, DiskIndex index) throws Exception {
-    TObjectIntHashMap<String> termCounts = new TObjectIntHashMap<String>();
+    TObjectIntHashMap<String> termCounts = new TObjectIntHashMap<>();
     for(String term : doc.terms) {
       if(stopWords.contains(term)) continue;
       termCounts.adjustOrPutValue(term, 1, 1);
@@ -42,7 +42,7 @@ public class FindInterestingTerms extends AppFunction {
     System.err.println("# counted: "+id);
 
 
-    FixedSizeMinHeap<WeightedTerm> rankedTerms = new FixedSizeMinHeap<WeightedTerm>(WeightedTerm.class, (int) argp.get("requested", 25), new WeightedTerm.Comparator());
+    FixedSizeMinHeap<WeightedTerm> rankedTerms = new FixedSizeMinHeap<>(WeightedTerm.class, (int) argp.get("requested", 25), new WeightedTerm.Comparator());
 
     Retrieval ret = new LocalRetrieval(index);
     for(String term : termCounts.keySet()) {
@@ -62,10 +62,10 @@ public class FindInterestingTerms extends AppFunction {
 
   @Override
   public String getHelpString() {
-    return AppFnRunner.helpDescriptions(this, Parameters.parseArray(
+    return makeHelpStr(
         "index", "INDEX",
         "id", "document id"
-    ));
+    );
   }
 
   @Override
@@ -77,7 +77,7 @@ public class FindInterestingTerms extends AppFunction {
 
     stopWords = WordLists.getWordList("inquery");
 
-    TObjectIntHashMap<String> termCounts = new TObjectIntHashMap<String>();
+    TObjectIntHashMap<String> termCounts = new TObjectIntHashMap<>();
     List<String> terms = doc.terms;
     for (int i = 0; i < terms.size()-1; i++) {
       String[] gram = new String[] {terms.get(i), terms.get(i+1)};
@@ -93,7 +93,7 @@ public class FindInterestingTerms extends AppFunction {
       termCounts.adjustOrPutValue(bigram, 1, 1);
     }
 
-    ArrayList<String> ngrams = new ArrayList<String>();
+    ArrayList<String> ngrams = new ArrayList<>();
     for(String ngram : termCounts.keySet()) {
       double tf = termCounts.get(ngram);
       if (tf < 10) continue;
@@ -102,9 +102,10 @@ public class FindInterestingTerms extends AppFunction {
 
     System.err.println("# counted: "+id+" numTerms: "+termCounts.size()+" kept: "+ngrams.size());
 
-    FixedSizeMinHeap<WeightedTerm> rankedTerms = new FixedSizeMinHeap<WeightedTerm>(WeightedTerm.class, (int) argp.get("requested", 25), new WeightedTerm.Comparator());
+    FixedSizeMinHeap<WeightedTerm> rankedTerms = new FixedSizeMinHeap<>(WeightedTerm.class, (int) argp.get("requested", 25), new WeightedTerm.Comparator());
 
     Retrieval ret = new LocalRetrieval(index);
+    assert(ret != null);
     for(String ngram : ngrams) {
       double tf = termCounts.get(ngram);
       /*Node od = new Node("od");

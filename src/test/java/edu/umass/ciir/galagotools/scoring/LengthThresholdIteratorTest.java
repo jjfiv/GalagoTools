@@ -14,7 +14,7 @@ import org.lemurproject.galago.utility.Parameters;
 import static org.junit.Assert.assertEquals;
 
 public class LengthThresholdIteratorTest {
-  private Tokenizer tokenizer = Tokenizer.instance(Parameters.instance());
+  private Tokenizer tokenizer = Tokenizer.create(Parameters.create());
   private MemoryIndex memIndex;
 
   private Document makeDoc(String title, String body) {
@@ -35,7 +35,7 @@ public class LengthThresholdIteratorTest {
   }
 
   Results doQ(LocalRetrieval ret, String text) throws Exception {
-    Parameters qp = Parameters.instance();
+    Parameters qp = Parameters.create();
     Node query = StructuredQuery.parse(text);
     Node xquery = ret.transformQuery(query, qp);
     System.out.println(xquery);

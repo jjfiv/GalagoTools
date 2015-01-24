@@ -37,7 +37,7 @@ public class DateUtil {
     "november",
     "december",
   };
-  private static final Set<String> monthSet = new TreeSet<String>(Arrays.asList(months));
+  private static final Set<String> monthSet = new TreeSet<>(Arrays.asList(months));
 
   public static boolean isMonthDay(String text) {
     if(!text.contains(" "))

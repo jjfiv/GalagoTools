@@ -1,5 +1,7 @@
 package edu.umass.ciir.galagotools.galago;
 
+import com.google.common.collect.Lists;
+import org.lemurproject.galago.core.eval.EvalDoc;
 import org.lemurproject.galago.core.eval.QueryJudgments;
 import org.lemurproject.galago.core.eval.QueryResults;
 import org.lemurproject.galago.core.eval.QuerySetJudgments;
