@@ -17,13 +17,13 @@ import java.util.Map;
  */
 public class EasyEval {
   public static Map<String,Double> eval(QuerySetJudgments qsj, String qid, List<ScoredDocument> docs, List<String> metrics) {
-    HashMap<String,Double> metricValues = new HashMap<String,Double>();
+    HashMap<String,Double> metricValues = new HashMap<>();
     assert(qsj.containsKey(qid));
     assert(!metrics.isEmpty());
     final QueryJudgments qj = qsj.get(qid);
-    final QueryResults qres = new QueryResults(qid, docs);
+    final QueryResults qres = new QueryResults(docs);
     for(String metric : metrics) {
-      QueryEvaluator qeval = QueryEvaluatorFactory.instance(metric, Parameters.instance());
+      QueryEvaluator qeval = QueryEvaluatorFactory.create(metric, Parameters.create());
       double score = qeval.evaluate(qres, qj);
       metricValues.put(metric, score);
     }
@@ -31,8 +31,8 @@ public class EasyEval {
   }
 
   public static double singleQuery(List<ScoredDocument> results, String qid, QuerySetJudgments qrels, String metric) {
-    QueryResults res = new QueryResults(qid, results);
-    QueryEvaluator evaluator = QueryEvaluatorFactory.instance(metric, Parameters.instance());
+    QueryResults res = new QueryResults(results);
+    QueryEvaluator evaluator = QueryEvaluatorFactory.create(metric, Parameters.create());
     return evaluator.evaluate(res, qrels.get(qid));
   }
 }

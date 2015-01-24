@@ -51,13 +51,13 @@ public class Util {
     return paths;
   }
 
-  public static <T> T last(List<T> input) {
+  public static <T> T last(List<? extends T> input) {
     if(input.isEmpty()) return null;
     int lastItem = input.size() - 1;
     return input.get(lastItem);
   }
 
-  public static <T> List<T> take(List<T> input, int count) {
+  public static <T> List<T> take(List<? extends T> input, int count) {
     List<T> output = new ArrayList<>(count);
     for(int i=0; i<count && i<input.size(); i++) {
       output.add(input.get(i));
@@ -71,7 +71,7 @@ public class Util {
    * @param <T> type parameter
    * @return the last item or null if none
    */
-  public static <T> T popLast(List<T> input) {
+  public static <T> T popLast(List<? extends T> input) {
     if(input.isEmpty()) return null;
     int lastItem = input.size() - 1;
     T last = input.get(lastItem);
@@ -79,7 +79,7 @@ public class Util {
     return last;
   }
 
-  public static <T> T first(Set<T> input) {
+  public static <T> T first(Set<? extends T> input) {
     if(input.isEmpty()) return null;
     return input.iterator().next();
   }
@@ -94,31 +94,32 @@ public class Util {
     return input.keySet().iterator().next();
   }
 
-  public static <T> T first(List<T> input) {
+  public static <T> T first(List<? extends T> input) {
     if(input.isEmpty()) return null;
     return input.get(0);
   }
 
-  public static <T> List<T> rest(List<T> input) {
+  public static <T> List<T> rest(List<? extends T> input) {
     if(input.size() < 2) {
       return Collections.emptyList();
     }
     return new ArrayList<>(input.subList(1, input.size()));
   }
 
-  public static <T> Set<T> intersection(List<Set<T>> sets) {
+  public static <T> Set<T> intersection(List<Set<? extends T>> sets) {
     if(sets.isEmpty()) return Collections.emptySet();
 
-    Set<T> accum = sets.get(0);
+    Set<T> accum = new HashSet<>();
+    accum.addAll(sets.get(0));
     for(int i=1; i<sets.size(); i++) {
       accum = intersection(accum, sets.get(i));
     }
     return accum;
   }
 
-  public static <T> Set<T> intersection(Set<T> lhs, Set<T> rhs) {
-    Set<T> minSet = lhs.size() < rhs.size() ? lhs : rhs;
-    Set<T> maxSet = lhs.size() < rhs.size() ? rhs : lhs;
+  public static <T> Set<T> intersection(Set<? extends T> lhs, Set<? extends T> rhs) {
+    Set<? extends T> minSet = lhs.size() < rhs.size() ? lhs : rhs;
+    Set<? extends T> maxSet = lhs.size() < rhs.size() ? rhs : lhs;
 
     HashSet<T> isect = new HashSet<>();
     for(T x : minSet) {
@@ -171,13 +172,13 @@ public class Util {
     existing.add(value);
   }
 
-  public static <T extends Comparable> List<T> sorted(Collection<T> input) {
+  public static <T extends Comparable> List<T> sorted(Collection<? extends T> input) {
     List<T> sortable = new ArrayList<>(input);
     Collections.sort(sortable);
     return sortable;
   }
 
-  public static <T> List<T> concat(Collection<T> first, Collection<T> second) {
+  public static <T> List<T> concat(Collection<? extends T> first, Collection<? extends T> second) {
     ArrayList<T> full = new ArrayList<>();
     full.addAll(first);
     full.addAll(second);
@@ -188,7 +189,7 @@ public class Util {
     public B process(A input) throws Exception;
   }
 
-  public static <T,U> List<U> map(List<T> input, Transform<T,U> transform) {
+  public static <T,U> List<U> map(List<? extends T> input, Transform<T,U> transform) {
     ArrayList<U> output = new ArrayList<>(input.size());
     for(T x : input) {
       try {
@@ -201,7 +202,7 @@ public class Util {
   }
 
   /** process a list in batches of a given size */
-  public static <T> List<List<T>> batched(List<T> input, int batchSize) {
+  public static <T> List<List<T>> batched(List<? extends T> input, int batchSize) {
     int numElements = input.size();
     int numBatches = numElements/batchSize;
     if(numBatches * batchSize < numElements) {
