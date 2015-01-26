@@ -1,5 +1,6 @@
 package edu.umass.ciir.galagotools.utils;
 
+import edu.umass.ciir.galagotools.tuple.Pair;
 import org.lemurproject.galago.tupleflow.FileUtility;
 import org.lemurproject.galago.utility.Parameters;
 
@@ -106,7 +107,7 @@ public class Util {
     return new ArrayList<>(input.subList(1, input.size()));
   }
 
-  public static <T> Set<T> intersection(List<Set<? extends T>> sets) {
+  public static <T> Set<T> intersection(List<Collection<? extends T>> sets) {
     if(sets.isEmpty()) return Collections.emptySet();
 
     Set<T> accum = new HashSet<>();
@@ -117,9 +118,9 @@ public class Util {
     return accum;
   }
 
-  public static <T> Set<T> intersection(Set<? extends T> lhs, Set<? extends T> rhs) {
-    Set<? extends T> minSet = lhs.size() < rhs.size() ? lhs : rhs;
-    Set<? extends T> maxSet = lhs.size() < rhs.size() ? rhs : lhs;
+  public static <T> Set<T> intersection(Collection<? extends T> lhs, Collection<? extends T> rhs) {
+    Collection<? extends T> minSet = lhs.size() < rhs.size() ? lhs : rhs;
+    Collection<? extends T> maxSet = lhs.size() < rhs.size() ? rhs : lhs;
 
     HashSet<T> isect = new HashSet<>();
     for(T x : minSet) {
@@ -178,7 +179,7 @@ public class Util {
     return sortable;
   }
 
-  public static <T extends Comparable> List<T> sorted(Collection<? extends T> input, Comparator<T> cmp) {
+  public static <T> List<T> sorted(Collection<? extends T> input, Comparator<T> cmp) {
     List<T> sortable = new ArrayList<>(input);
     Collections.sort(sortable, cmp);
     return sortable;
@@ -189,6 +190,32 @@ public class Util {
     full.addAll(first);
     full.addAll(second);
     return full;
+  }
+
+  public static <T> List<List<T>> sliding(List<T> input, int window) {
+    List<List<T>> windows = new ArrayList<>(input.size());
+    for (int start = 0; (start+window-1) < input.size(); start++) {
+      int end = start + window; // inclusive
+      windows.add(input.subList(start, end));
+    }
+    return windows;
+  }
+
+  public static <T> List<Pair<T,T>> pairs(List<T> input) {
+    List<Pair<T,T>> output = new ArrayList<>(input.size()*(input.size()-1));
+    for (int i = 0; i < input.size()-1; i++) {
+      for (int j = i+1; j < input.size(); j++) {
+        output.add(Pair.of(input.get(i), input.get(j)));
+      }
+    }
+    return output;
+  }
+
+  public static <T> Set<T> union(Collection<T> lhs, Collection<T> rhs) {
+    HashSet<T> results = new HashSet<>(lhs.size() + rhs.size());
+    results.addAll(lhs);
+    results.addAll(rhs);
+    return results;
   }
 
   public static interface Transform<A,B> {

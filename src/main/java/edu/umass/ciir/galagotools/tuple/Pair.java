@@ -1,9 +1,12 @@
 package edu.umass.ciir.galagotools.tuple;
 
+import java.util.AbstractList;
+import java.util.Map;
+
 /**
 * @author jfoley
 */
-public class Pair<A,B> {
+public class Pair<A,B> implements Map.Entry<A,B> {
   public final A left;
   public final B right;
 
@@ -15,6 +18,26 @@ public class Pair<A,B> {
   @Override
   public int hashCode() {
     return left.hashCode() ^ right.hashCode();
+  }
+
+  @Override
+  public A getKey() {
+    return left;
+  }
+
+  @Override
+  public B getValue() {
+    return right;
+  }
+
+  @Override
+  public B setValue(B b) {
+    throw new UnsupportedOperationException("Pair is immutable.");
+  }
+
+  @Override
+  public String toString() {
+    return "["+left+" "+right+"]";
   }
 
   @Override
