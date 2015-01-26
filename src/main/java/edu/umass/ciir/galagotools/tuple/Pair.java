@@ -24,4 +24,8 @@ public class Pair<A,B> {
     Pair cmp = (Pair) other;
     return left.equals(cmp.left) && right.equals(cmp.right);
   }
+
+  public static <X,Y> Pair<X,Y> of(X lhs, Y rhs) {
+    return new Pair<>(lhs, rhs);
+  }
 }

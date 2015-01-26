@@ -178,6 +178,12 @@ public class Util {
     return sortable;
   }
 
+  public static <T extends Comparable> List<T> sorted(Collection<? extends T> input, Comparator<T> cmp) {
+    List<T> sortable = new ArrayList<>(input);
+    Collections.sort(sortable, cmp);
+    return sortable;
+  }
+
   public static <T> List<T> concat(Collection<? extends T> first, Collection<? extends T> second) {
     ArrayList<T> full = new ArrayList<>();
     full.addAll(first);
