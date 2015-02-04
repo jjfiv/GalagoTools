@@ -1,6 +1,6 @@
 package edu.umass.ciir.galagotools.utils;
 
-import edu.umass.ciir.galagotools.tuple.Pair;
+import ciir.jfoley.chai.collections.Pair;
 import org.junit.Test;
 
 import java.util.*;

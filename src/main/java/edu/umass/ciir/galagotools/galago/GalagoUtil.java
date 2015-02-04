@@ -1,7 +1,7 @@
 package edu.umass.ciir.galagotools.galago;
 
 import edu.umass.ciir.galagotools.callback.Operation;
-import edu.umass.ciir.galagotools.utils.Util;
+import ciir.jfoley.chai.collections.iters.ReadOnlyIterator;
 import org.lemurproject.galago.core.index.Index;
 import org.lemurproject.galago.core.index.KeyIterator;
 import org.lemurproject.galago.core.index.corpus.CorpusReader;
@@ -134,8 +134,11 @@ public class GalagoUtil {
   }
 
   private static <T> Iterator<T> asIterator(final DataSource<T> source) {
-    return new Util.ReadOnlyIterator<T>() {
-      @Override
+    return new ReadOnlyIterator<T>() {
+			@Override
+			public void close() throws Exception {  }
+
+			@Override
       public boolean hasNext() {
         return !source.isDone();
       }
@@ -200,7 +203,7 @@ public class GalagoUtil {
 
 
 
-  private static class DocumentStreamIterator extends Util.ReadOnlyIterator<Document> implements Closeable {
+  private static class DocumentStreamIterator extends ReadOnlyIterator<Document> implements Closeable {
     private DocumentStreamParser parser;
     private Document current;
 

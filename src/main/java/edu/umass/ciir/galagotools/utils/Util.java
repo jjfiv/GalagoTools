@@ -1,11 +1,10 @@
 package edu.umass.ciir.galagotools.utils;
 
-import edu.umass.ciir.galagotools.tuple.Pair;
+import ciir.jfoley.chai.collections.Pair;
 import org.lemurproject.galago.tupleflow.FileUtility;
 import org.lemurproject.galago.utility.Parameters;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -256,55 +255,4 @@ public class Util {
     return batched;
   }
 
-  public static class OneShotIterable<T> implements Iterable<T> {
-    private Iterator<T> iter;
-    public OneShotIterable(Iterator<T> iter) {
-      this.iter = iter;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-      if(iter == null) throw new IllegalStateException("Can't use a OneShotIterable twice!");
-      Iterator<T> prev = iter;
-      iter = null;
-      return prev;
-    }
-  }
-
-  public static interface UntilNullGenerator<T> {
-    public T next() throws IOException;
-  }
-
-  public static abstract class ReadOnlyIterator<T> implements Iterator<T> {
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException();
-    }
-  }
-
-  public static class UntilNullIterator<T> extends ReadOnlyIterator<T> {
-    public final UntilNullGenerator<T> generator;
-    public T nextValue;
-
-    public UntilNullIterator(UntilNullGenerator<T> generator) throws IOException {
-      this.generator = generator;
-      this.nextValue = generator.next();
-    }
-
-    @Override
-    public boolean hasNext() {
-      return nextValue != null;
-    }
-
-    @Override
-    public T next() {
-      try {
-        T prevValue = nextValue;
-        nextValue = generator.next();
-        return prevValue;
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
-  }
 }

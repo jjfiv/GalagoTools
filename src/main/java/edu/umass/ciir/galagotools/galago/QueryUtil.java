@@ -1,6 +1,6 @@
 package edu.umass.ciir.galagotools.galago;
 
-import edu.umass.ciir.galagotools.err.NotHandledNow;
+import ciir.jfoley.chai.errors.NotHandledNow;
 import edu.umass.ciir.galagotools.utils.DateUtil;
 import org.lemurproject.galago.core.retrieval.query.Node;
 import org.lemurproject.galago.core.retrieval.traversal.Traversal;
